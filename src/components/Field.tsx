@@ -1,52 +1,56 @@
 import { useFonts } from 'expo-font';
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
 import { colorSet } from './../styles/style';
+import Button from './Button';
 
-interface Props{
+interface Props {
   placeholder: string;
   value: string;
+  type?: TextInputProps['autoComplete'];
   onChange: (text: string) => void;
 }
 
-export default function Field(props: Props){
+export default function Field(props: Props) {
   const [fontsLoaded] = useFonts({
     Inter: require('./../../assets/fonts/Inter-Regular.ttf'),
   });
 
-  if(!fontsLoaded){
+  if(!props.type){
+    props.type = 'off';
+  }
+
+  if (!fontsLoaded) {
     return null;
   }
 
-  if(props.value){
-    return(
+  if (props.value) {
+    return (
       <View>
-        <Text style={styles.legend}>
-          {props.placeholder}
-        </Text>
+        <Text style={styles.legend}>{props.placeholder}</Text>
         <TextInput
+          autoComplete={props.type}
           style={styles.focusedInput}
           placeholder={props.placeholder}
           value={props.value}
           onChangeText={props.onChange}
-          autoFocus={true}
+          key={props.placeholder}
         />
       </View>
-      );
+    );
   }
 
-
-  return(
+  return (
     <View>
       <TextInput
         style={styles.input}
         placeholder={props.placeholder}
         value={props.value}
         onChangeText={props.onChange}
-        autoFocus={true}
+        key={props.placeholder}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,6 +70,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontFamily: 'Inter',
     fontSize: 17,
+    color: colorSet.colorText,
   },
   legend: {
     fontFamily: 'Inter',
@@ -73,5 +78,5 @@ const styles = StyleSheet.create({
     color: colorSet.colorText,
     position: 'absolute',
     top: -20,
-  }
+  },
 });

@@ -46,7 +46,7 @@ export default function GuestHome(){
             <Text style={styles.textMuted}>OU</Text>
             <View style={styles.line} />
           </View>
-          <Button action={()=>{navigation.navigate('Login')
+          <Button action={()=>{navigation.push('Login')
             }} text='Se connecter avec Hack The Cr*us' color={colorSet.colorPrimary}/>
           <View style={{ ...styles.paragraph, marginTop: 10 }}>
             <Text style={styles.text}>Pas encore inscrit ? </Text>

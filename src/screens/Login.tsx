@@ -4,6 +4,9 @@ import { View, StyleSheet, Text } from 'react-native';
 import LoginHeader from '../components/headers/LoginHeader';
 import Field from '../components/Field';
 import { useState } from 'react';
+import Button from '../components/Button';
+import { AppStackParamList } from '../../App';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Login() {
   const [fontsLoaded] = useFonts({
@@ -13,22 +16,76 @@ export default function Login() {
   });
 
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPasswordStep, setIsPasswordStep] = useState(false);
+  const navigation = useNavigation<AppStackParamList>();
 
   if (!fontsLoaded) {
     return null;
   }
 
+
+  if (isPasswordStep) {
+    return (
+    <View style={styles.body}>
+      <View>
+        <LoginHeader />
+        <Text style={styles.heading}>Maintenant, saisis ton mot de passe</Text>
+        <Field
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={text => {
+            setEmail(text);
+          }}
+        />
+        <View style={{height:30}}></View>
+        <Field
+          type="password"
+          placeholder="Mot de passe"
+          value={password}
+          onChange={text => {
+            setPassword(text);
+          }}
+        />
+      </View>
+      <View style={{flexDirection:'row', width:'100%', marginBottom:10,justifyContent:"flex-end"}}>
+      <Button
+        text="Valider"
+        color={colorSet.colorText}
+        style={{ width: '30%' }}
+        action={() => {
+        }}
+      />
+      </View>
+    </View>
+  )
+  }
+
   return (
     <View style={styles.body}>
-      <LoginHeader />
-      <Text style={styles.heading}>Pour commencer, entre ton mail</Text>
-      <Field
-        placeholder="Email"
-        value={email}
-        onChange={(text) => {
-          setEmail(text);
-        }}
+      <View>
+        <LoginHeader />
+        <Text style={styles.heading}>Pour commencer, entre ton mail</Text>
+        <Field
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={text => {
+            setEmail(text);
+          }}
         />
+      </View>
+      <View style={{flexDirection:'row', width:'100%', marginBottom:10,justifyContent:"flex-end"}}>
+      <Button
+        text="Valider"
+        color={colorSet.colorText}
+        style={{ width: '30%' }}
+        action={() => {
+          setIsPasswordStep(true);
+        }}
+      />
+      </View>
     </View>
   );
 }
@@ -41,7 +98,7 @@ const styles = StyleSheet.create({
     paddingTop: 17,
     backgroundColor: colorSet.colorBackground,
     height: '100%',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   heading: {
     fontFamily: 'Inter-Black',
@@ -49,5 +106,5 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     color: colorSet.colorHeading,
     width: '80%',
-  }
+  },
 });

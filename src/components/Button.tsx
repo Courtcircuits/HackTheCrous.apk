@@ -7,6 +7,7 @@ interface Props{
   text: string;
   color: string;
   children?: JSX.Element;
+  style?: object;
 }
 
 
@@ -28,9 +29,9 @@ export default function Button(props: Props){
         console.log('Button pressed');
         props.action();
       }}
-      style={{...styles.button, borderColor: props.color}}>
+      style={{...styles.button,...props.style, borderColor: props.color}}>
       {props.children}
-      <Text style={{...styles.buttonText, color: props.color}}>
+      <Text style={ props.children ? {...styles.buttonTextWithIcon, color: props.color} : {...styles.buttonText, color: props.color} }>
         {props.text}
       </Text>
       </TouchableOpacity>
@@ -51,6 +52,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Inter',
+  },
+  buttonTextWithIcon: {
     marginLeft: 10,
   },
 });
