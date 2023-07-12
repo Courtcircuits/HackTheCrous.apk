@@ -1,13 +1,19 @@
 import { useFonts } from 'expo-font';
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+} from 'react-native';
 import { colorSet } from './../styles/style';
-import Button from './Button';
 
 interface Props {
   placeholder: string;
   value: string;
-  type?: TextInputProps['autoComplete'];
+  type?: TextInputProps['textContentType'];
+  autoComplete?: TextInputProps['autoComplete'];
   onChange: (text: string) => void;
 }
 
@@ -16,20 +22,45 @@ export default function Field(props: Props) {
     Inter: require('./../../assets/fonts/Inter-Regular.ttf'),
   });
 
-  if(!props.type){
-    props.type = 'off';
+  if (!props.type) {
+    props.type = 'none';
+  }
+
+  if (!props.autoComplete) {
+    props.autoComplete = 'off';
   }
 
   if (!fontsLoaded) {
     return null;
   }
 
+  console.log(props.value);
+
   if (props.value) {
+    if (props.type == 'password') {
+      return (
+        <View>
+          <Text style={styles.legend}>{props.placeholder}</Text>
+          <TextInput
+            textContentType={props.type}
+            autoComplete={props.autoComplete}
+            style={styles.input}
+            placeholder={props.placeholder}
+            value={props.value}
+            onChangeText={props.onChange}
+            key={props.placeholder}
+            secureTextEntry={true}
+          />
+        </View>
+      );
+    }
+
     return (
       <View>
         <Text style={styles.legend}>{props.placeholder}</Text>
         <TextInput
-          autoComplete={props.type}
+          textContentType={props.type}
+          autoComplete={props.autoComplete}
           style={styles.focusedInput}
           placeholder={props.placeholder}
           value={props.value}
@@ -40,6 +71,23 @@ export default function Field(props: Props) {
     );
   }
 
+  if(props.type == 'password') {
+    return (
+        <View>
+          <Text style={styles.legend}>{props.placeholder}</Text>
+          <TextInput
+            textContentType={props.type}
+            autoComplete={props.autoComplete}
+            style={styles.input}
+            placeholder={props.placeholder}
+            value={props.value}
+            onChangeText={props.onChange}
+            key={props.placeholder}
+            secureTextEntry={true}
+          />
+        </View>
+    );
+  }
   return (
     <View>
       <TextInput

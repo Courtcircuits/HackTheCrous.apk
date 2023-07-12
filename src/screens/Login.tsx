@@ -7,6 +7,42 @@ import { useState } from 'react';
 import Button from '../components/Button';
 import { AppStackParamList } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect } from 'react';
+import { UserContext } from '../contexts/UserContext';
+import axios from 'axios';
+import { EXPO_PUBLIC_API_URL } from '@env';
+
+interface AuthResponse {
+  type: string;
+  messsage: string;
+  token: string;
+  refreshToken?: string;
+  mail: string;
+}
+
+async function authenticate(
+  email: string,
+  password: string,
+  remember: boolean,
+): Promise<AuthResponse> {
+  try {
+    const res = await axios.post(`${EXPO_PUBLIC_API_URL}/login`, {
+      mail: email,
+      password: password,
+      remember: remember,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error(JSON.stringify(error));
+    return {
+      type: 'error',
+      messsage: 'Une erreur est survenue',
+      token: '',
+      mail: '',
+    };
+  }
+}
 
 export default function Login() {
   const [fontsLoaded] = useFonts({
@@ -18,48 +54,68 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordStep, setIsPasswordStep] = useState(false);
+  const user = useContext(UserContext);
   const navigation = useNavigation<AppStackParamList>();
 
   if (!fontsLoaded) {
     return null;
   }
 
-
   if (isPasswordStep) {
     return (
-    <View style={styles.body}>
-      <View>
-        <LoginHeader />
-        <Text style={styles.heading}>Maintenant, saisis ton mot de passe</Text>
-        <Field
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={text => {
-            setEmail(text);
-          }}
-        />
-        <View style={{height:30}}></View>
-        <Field
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={text => {
-            setPassword(text);
-          }}
-        />
+      <View style={styles.body}>
+        <View>
+          <LoginHeader />
+          <Text style={styles.heading}>
+            Maintenant, saisis ton mot de passe
+          </Text>
+          <Field
+            type="emailAddress"
+            autoComplete="email"
+            placeholder="Email"
+            value={email}
+            onChange={text => {
+              setEmail(text);
+            }}
+          />
+          <View style={{ height: 30 }}></View>
+          <Field
+            type="password"
+            autoComplete="password"
+            placeholder="Mot de passe"
+            value={password}
+            onChange={text => {
+              setPassword(text);
+            }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            marginBottom: 10,
+            justifyContent: 'flex-end',
+          }}>
+          <Button
+            text="Valider"
+            color={colorSet.colorText}
+            style={{ width: '30%' }}
+            action={() => {
+              const res = authenticate(email, password, false);
+              res.then(data => {
+                user.mail = data.mail;
+                user.logged = true;
+                user.token = data.token;
+                if (data.refreshToken) {
+                  user.refreshToken = data.refreshToken;
+                }
+                navigation.navigate('Home');
+              });
+            }}
+          />
+        </View>
       </View>
-      <View style={{flexDirection:'row', width:'100%', marginBottom:10,justifyContent:"flex-end"}}>
-      <Button
-        text="Valider"
-        color={colorSet.colorText}
-        style={{ width: '30%' }}
-        action={() => {
-        }}
-      />
-      </View>
-    </View>
-  )
+    );
   }
 
   return (
@@ -68,7 +124,8 @@ export default function Login() {
         <LoginHeader />
         <Text style={styles.heading}>Pour commencer, entre ton mail</Text>
         <Field
-          type="email"
+          autoComplete="email"
+          type="emailAddress"
           placeholder="Email"
           value={email}
           onChange={text => {
@@ -76,15 +133,21 @@ export default function Login() {
           }}
         />
       </View>
-      <View style={{flexDirection:'row', width:'100%', marginBottom:10,justifyContent:"flex-end"}}>
-      <Button
-        text="Valider"
-        color={colorSet.colorText}
-        style={{ width: '30%' }}
-        action={() => {
-          setIsPasswordStep(true);
-        }}
-      />
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          marginBottom: 10,
+          justifyContent: 'flex-end',
+        }}>
+        <Button
+          text="Valider"
+          color={colorSet.colorText}
+          style={{ width: '30%' }}
+          action={() => {
+            setIsPasswordStep(true);
+          }}
+        />
       </View>
     </View>
   );

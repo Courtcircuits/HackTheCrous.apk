@@ -1,31 +1,78 @@
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-}from 'react-native';
+import { useContext, useState } from 'react';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import GoogleIcon from './../../assets/icons/google-icon.svg';
 import HomeHeader from './../components/headers/HomeHeader';
 import Button from './../components/Button';
 import { colorSet } from '../styles/style';
 import { useFonts } from 'expo-font';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { AppStackParamList } from '../../App';
+import { UserContext } from '../contexts/UserContext';
 
-export default function GuestHome(){
+export default function GuestHome() {
   const [fontsLoaded] = useFonts({
     Inter: require('./../../assets/fonts/Inter-Regular.ttf'),
     'Inter-Black': require('./../../assets/fonts/Inter-Black.ttf'),
     DarkerGrotesque: require('./../../assets/fonts/DarkerGrotesque-Medium.ttf'),
   });
 
+  const user = useContext(UserContext);
+
+  const [wantsToLogin, setWantsToLogin] = useState(false);
+
   const navigation = useNavigation<AppStackParamList>();
-  
+
+  if (user.isLogged) {
+    navigation.navigate('Home');
+  }
+
   if (!fontsLoaded) {
     return null;
+  }
+
+  if (!wantsToLogin) {
+    return (
+      <View style={styles.body}>
+        <HomeHeader />
+        <View style={styles.container}>
+          <View style={{ ...styles.centerContainer, flex: 1 }}>
+            <Text style={styles.heading}>
+              Hack The Cr*us, une plateforme par et pour les étudiants.
+            </Text>
+          </View>
+          <View style={{ ...styles.centerContainer, flex: 2 }}>
+            <Button
+              text="S'inscrire avec Google"
+              color={colorSet.colorText}
+              action={() => {}}>
+              <GoogleIcon width={20} height={20} />
+            </Button>
+            <View style={styles.separator}>
+              <View style={styles.line} />
+              <Text style={styles.textMuted}>OU</Text>
+              <View style={styles.line} />
+            </View>
+            <Button
+              action={() => {
+                navigation.push('Register');
+              }}
+              text="S'inscrire sur Hack the Cr*us"
+              color={colorSet.colorPrimary}
+            />
+            <View style={{ ...styles.paragraph, marginTop: 10 }}>
+              <Text style={styles.text}>Déjà un compte ?</Text>
+              <TouchableOpacity
+                accessibilityLabel="Se connecter"
+                onPress={() => {
+                  setWantsToLogin(true);
+                }}>
+                <Text style={styles.link}> Connecte toi en cliquant ici.</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
   }
 
   return (
@@ -38,7 +85,10 @@ export default function GuestHome(){
           </Text>
         </View>
         <View style={{ ...styles.centerContainer, flex: 2 }}>
-          <Button text='Se connecter avec Google' color={colorSet.colorText} action={()=>{}}>
+          <Button
+            text="Se connecter avec Google"
+            color={colorSet.colorText}
+            action={() => {}}>
             <GoogleIcon width={20} height={20} />
           </Button>
           <View style={styles.separator}>
@@ -46,13 +96,20 @@ export default function GuestHome(){
             <Text style={styles.textMuted}>OU</Text>
             <View style={styles.line} />
           </View>
-          <Button action={()=>{navigation.push('Login')
-            }} text='Se connecter avec Hack The Cr*us' color={colorSet.colorPrimary}/>
+          <Button
+            action={() => {
+              navigation.push('Login');
+            }}
+            text="Se connecter avec Hack The Cr*us"
+            color={colorSet.colorPrimary}
+          />
           <View style={{ ...styles.paragraph, marginTop: 10 }}>
             <Text style={styles.text}>Pas encore inscrit ? </Text>
             <TouchableOpacity
               accessibilityLabel="S'inscrire"
-              onPress={() => {}}>
+              onPress={() => {
+                setWantsToLogin(false);
+              }}>
               <Text style={styles.link}>Inscrit toi en cliquant ici.</Text>
             </TouchableOpacity>
           </View>
