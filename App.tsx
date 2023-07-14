@@ -1,19 +1,30 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { AppRegistry, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
 import GuestHome from './src/screens/GuestHome';
 import Login from './src/screens/Login';
-import { colorSet } from './src/styles/style';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Register from './src/screens/Register';
-import Home from './src/screens/Home';
-import { UserContextProvider } from './src/contexts/UserContext';
+import { UserContext, UserContextProvider } from './src/contexts/UserContext';
+import { AuthContext, AuthContextProvider } from './src/contexts/AuthContext';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+  NormalizedCacheObject,
+} from '@apollo/client';
+import { EXPO_PUBLIC_API_URL } from '@env';
+import UserSpace from './src/router/UserSpace';
+import { ApolloClientProvider, createApolloClient } from './src/utils/ApolloClient';
+import UserDataProvisionner from './src/utils/UserDataProvisionner';
 
 export type AppStackParamList = {
   GuestHome: undefined;
   Login: undefined;
   Register: undefined;
-  Home: undefined;
+  UserSpace: undefined;
+  UserDataProvisionner: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -32,36 +43,39 @@ const routes: Array<React.ComponentProps<typeof Stack.Screen>> = [
     component: Register,
   },
   {
-    name: 'Home',
-    component: Home,
+    name: 'UserDataProvisionner',
+    component: UserDataProvisionner
+  },
+  {
+    name: 'UserSpace',
+    component: UserSpace,
   },
 ];
 
 export default function App(): JSX.Element {
-  return (
+  const { auth, setAuth } = React.useContext(AuthContext);
+  const client = createApolloClient(auth.token);
+   return (
+   <AuthContextProvider>
     <UserContextProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            animation: 'none',
-          }}>
-          {routes.map(route => (
-            <Stack.Screen key={route.name} {...route} />
-          ))}
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ApolloClientProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+              animation: 'none',
+              gestureEnabled: false,
+            }}>
+            {routes.map(route => (
+              <Stack.Screen key={route.name} {...route} />
+            ))}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ApolloClientProvider>
     </UserContextProvider>
+  </AuthContextProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  body: {
-    paddingTop: 17,
-    backgroundColor: colorSet.colorBackground,
-    height: '100%',
-  },
-  text: {
-    color: colorSet.colorText,
-  },
-});
+AppRegistry.registerComponent('App', () => App);
+

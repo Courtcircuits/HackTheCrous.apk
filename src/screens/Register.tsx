@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFonts } from "expo-font";
 import {StyleSheet, Text, View} from "react-native";
 import LoginHeader from "../components/headers/LoginHeader";
 import { colorSet } from "./../styles/style";
 import Field from "../components/Field";
 import Button from "../components/Button";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigation } from "@react-navigation/native";
+import { AppStackParamList } from "../../App";
 
 export default function Register(){
   const [fontsLoaded] = useFonts({
@@ -19,6 +22,13 @@ export default function Register(){
 
   if (!fontsLoaded) {
     return null;
+  }
+
+  const user = useContext(UserContext);
+  const navigation = useNavigation<AppStackParamList>();
+
+  if (user.logged) {
+    navigation.navigate('Home');
   }
 
   return(

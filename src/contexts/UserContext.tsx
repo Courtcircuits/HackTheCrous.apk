@@ -1,39 +1,71 @@
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 
-export const UserContext = createContext({
-  mail: '',
-  token: '',
-  name: '',
-  logged: false,
-  ical: '',
-  nonce: true,
+export type User = {
+  mail: string;
+  token: string;
+  name: string;
+  logged: boolean;
+  ical: string;
+  nonce: boolean;
   school: {
-    status: 'no data'
-  },
-  favorites: [],
-  refreshToken: '',
-  refreshingToken: false,
-  avatar: 'https://i.pinimg.com/280x280_RS/74/21/36/74213647d47d9e608696e17ba55cc810.jpg'
-});
+    status: string;
+  };
+  favorites: Array<{
+    idrestaurant: string;
+    url: string;
+    name: string;
+  }>;
+  refreshToken: string;
+  refreshingToken: boolean;
+  avatar: string;
+};
 
-export function UserContextProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <UserContext.Provider value={{
-      mail: '',
-      token: '',
-      name: '',
-      logged: false,
-      ical: '',
-      nonce: true,
-      school: {
-        status: 'no data'
+export const UserContext = createContext<{
+  user: User;
+  setUser: (user: User) => void;
+}>({
+      user: {
+        mail: '',
+        token: '',
+        name: '',
+        logged: false,
+        ical: '',
+        nonce: true,
+        school: {
+          status: 'no data',
+          },
+        favorites: [],
+        refreshToken: '',
+        refreshingToken: false,
+        avatar: ''
       },
-      favorites: [],
-      refreshToken: '',
-      refreshingToken: false,
-      avatar: 'https://i.pinimg.com/280x280_RS/74/21/36/74213647d47d9e608696e17ba55cc810.jpg'
-    }}>
-      {children}
-    </UserContext.Provider>
-      );
+      setUser: (user: User) => {},
+    });
+
+export function UserContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [user, setUser] = useState<User>({
+    mail: '',
+    token: '',
+    name: '',
+    logged: false,
+    ical: '',
+    nonce: true,
+    school: {
+      status: 'no data',
+    },
+    favorites: [],
+    refreshToken: '',
+    refreshingToken: false,
+    avatar:
+      'https://i.pinimg.com/280x280_RS/74/21/36/74213647d47d9e608696e17ba55cc810.jpg',
+  });
+
+  return <UserContext.Provider value={{
+    user,
+    setUser,
+  }}>{children}</UserContext.Provider>;
 }

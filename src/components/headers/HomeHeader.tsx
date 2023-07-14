@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 
 export default function HomeHeader() {
-  const user = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
 
   if (user.logged) {
     return (

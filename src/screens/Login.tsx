@@ -11,6 +11,7 @@ import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import axios from 'axios';
 import { EXPO_PUBLIC_API_URL } from '@env';
+import { AuthContext } from '../contexts/AuthContext';
 
 interface AuthResponse {
   type: string;
@@ -54,7 +55,8 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordStep, setIsPasswordStep] = useState(false);
-  const user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const navigation = useNavigation<AppStackParamList>();
 
   if (!fontsLoaded) {
@@ -103,13 +105,11 @@ export default function Login() {
             action={() => {
               const res = authenticate(email, password, false);
               res.then(data => {
-                user.mail = data.mail;
-                user.logged = true;
-                user.token = data.token;
-                if (data.refreshToken) {
-                  user.refreshToken = data.refreshToken;
-                }
-                navigation.navigate('Home');
+                setAuth({
+                  refreshToken: data.refreshToken ? data.refreshToken : '',
+                  token: data.token,
+                });
+                navigation.navigate('UserSpace');
               });
             }}
           />

@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native';
 import { AppStackParamList } from '../../App';
 import { UserContext } from '../contexts/UserContext';
+import { AlertContext } from '../contexts/AlertContext';
 
 export default function GuestHome() {
   const [fontsLoaded] = useFonts({
@@ -21,8 +22,9 @@ export default function GuestHome() {
   const [wantsToLogin, setWantsToLogin] = useState(false);
 
   const navigation = useNavigation<AppStackParamList>();
+  const alertContext = useContext(AlertContext);
 
-  if (user.isLogged) {
+  if (user.logged) {
     navigation.navigate('Home');
   }
 
@@ -44,7 +46,13 @@ export default function GuestHome() {
             <Button
               text="S'inscrire avec Google"
               color={colorSet.colorText}
-              action={() => {}}>
+              action={() => {
+                console.log('Google login');
+                alertContext.alerts.push({
+                  message: 'Cette fonctionnalité sera disponible bientôt.',
+                  type: 'error',
+                });
+              }}>
               <GoogleIcon width={20} height={20} />
             </Button>
             <View style={styles.separator}>
