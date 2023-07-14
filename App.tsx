@@ -1,23 +1,16 @@
-import { AppRegistry, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import { AppRegistry } from 'react-native';
+import React  from 'react';
 import GuestHome from './src/screens/GuestHome';
 import Login from './src/screens/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Register from './src/screens/Register';
-import { UserContext, UserContextProvider } from './src/contexts/UserContext';
-import { AuthContext, AuthContextProvider } from './src/contexts/AuthContext';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-  NormalizedCacheObject,
-} from '@apollo/client';
-import { EXPO_PUBLIC_API_URL } from '@env';
+import { UserContextProvider } from './src/contexts/UserContext';
+import { AuthContextProvider } from './src/contexts/AuthContext';
 import UserSpace from './src/router/UserSpace';
-import { ApolloClientProvider, createApolloClient } from './src/utils/ApolloClient';
+import { ApolloClientProvider } from './src/utils/ApolloClient';
 import UserDataProvisionner from './src/utils/UserDataProvisionner';
+import { useFonts } from 'expo-font';
 
 export type AppStackParamList = {
   GuestHome: undefined;
@@ -26,6 +19,12 @@ export type AppStackParamList = {
   UserSpace: undefined;
   UserDataProvisionner: undefined;
 };
+
+export type AppStackNavigation = {
+  navigate: (screen: keyof AppStackParamList) => void;
+  push: (screen: keyof AppStackParamList) => void;
+  goBack: () => void;
+}
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -53,8 +52,16 @@ const routes: Array<React.ComponentProps<typeof Stack.Screen>> = [
 ];
 
 export default function App(): JSX.Element {
-  const { auth, setAuth } = React.useContext(AuthContext);
-  const client = createApolloClient(auth.token);
+  const [fontsLoaded] = useFonts({
+    Inter: require('./assets/fonts/Inter-Regular.ttf'),
+    VT323: require('./assets/fonts/VT323-Regular.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <></>;
+  }
+
+
    return (
    <AuthContextProvider>
     <UserContextProvider>

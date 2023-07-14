@@ -6,7 +6,7 @@ import Button from './../components/Button';
 import { colorSet } from '../styles/style';
 import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native';
-import { AppStackParamList } from '../../App';
+import { AppStackNavigation, AppStackParamList } from '../../App';
 import { UserContext } from '../contexts/UserContext';
 import { AlertContext } from '../contexts/AlertContext';
 
@@ -17,15 +17,15 @@ export default function GuestHome() {
     DarkerGrotesque: require('./../../assets/fonts/DarkerGrotesque-Medium.ttf'),
   });
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const [wantsToLogin, setWantsToLogin] = useState(false);
 
-  const navigation = useNavigation<AppStackParamList>();
+  const navigation = useNavigation<AppStackNavigation>();
   const alertContext = useContext(AlertContext);
 
   if (user.logged) {
-    navigation.navigate('Home');
+    navigation.navigate('UserSpace');
   }
 
   if (!fontsLoaded) {

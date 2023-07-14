@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "jsx": "react-native",
+    "moduleResolution": "node",
+    "typesRoots": ["./node_modules/@types", "./types"]
   },
   "typeAcquisition": { "enable": true }
 }

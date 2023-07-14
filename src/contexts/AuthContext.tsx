@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 export type Auth = {
   refreshToken: string;
@@ -23,9 +23,6 @@ export function AuthContextProvider(props: {
     refreshToken: '',
     token: '',
   });
-  useEffect(() => {
-    console.log('AuthContextProvider: auth changed', auth);
-  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { UserContext } from '../contexts/UserContext';
+import Loading from '../screens/Loading';
 
 export type UserSpaceParamList = {
   Home: undefined;
@@ -44,17 +45,23 @@ const routes: Array<React.ComponentProps<typeof Tab.Screen>> = [
       ),
     },
   },
+  {
+    name: 'Loading',
+    component: Loading,
+    options: {
+      tabBarLabel: 'Chargement',
+      tabBarIcon: ({ color, size }) => (
+        <HomeIcon width={size} height={size} fill={color} />
+      ),
+    },
+  }
 ];
 
 export default function UserSpace(): JSX.Element {
-  const [fontsLoaded] = useFonts({
-    Inter: require('./../../assets/fonts/Inter-Regular.ttf'),
-  });
 
   const { user, setUser } = React.useContext(UserContext);
 
   const { loading, error, data } = useQuery(GET_USER);
-
 
   useEffect(() => {
     if (user.name == '') {
@@ -77,38 +84,11 @@ export default function UserSpace(): JSX.Element {
     }
   }, [user, data, loading, error]);
 
-
-  
-  if (!fontsLoaded) {
-    return <></>;
-  }
-
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) return <Loading/>;
   if (error) {
     console.log(error);
     return <Text>Error :(</Text>;
   }
-  // client
-  //   .query({
-  //     query: GET_USER,
-  //   })
-  //   .then((res: any) => {
-  //     console.log(res);
-  //     setUser({
-  //       refreshToken: user.refreshToken,
-  //       token: user.token,
-  //       ical: res.data.user.ical,
-  //       name: res.data.user.name,
-  //       nonce: res.data.user.nonce,
-  //       school: res.data.user.school,
-  //       favorites: res.data.user.favorites,
-  //       mail: user.mail,
-  //       avatar: user.avatar,
-  //       logged: true,
-  //       refreshingToken: false,
-  //     });
-  //   });
-
   return (
     <Tab.Navigator
       initialRouteName="Home"
