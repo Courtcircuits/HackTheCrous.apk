@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AppStackNavigation, AppStackParamList } from '../../App';
 import { UserContext } from '../contexts/UserContext';
 import { AlertContext } from '../contexts/AlertContext';
+import GoogleAuth from '../components/GoogleAuth';
 
 export default function GuestHome() {
   const [fontsLoaded] = useFonts({
@@ -20,6 +21,8 @@ export default function GuestHome() {
   const { user } = useContext(UserContext);
 
   const [wantsToLogin, setWantsToLogin] = useState(false);
+
+  const [isGoogleAuth, setIsGoogleAuth] = useState(false);
 
   const navigation = useNavigation<AppStackNavigation>();
   const alertContext = useContext(AlertContext);
@@ -48,10 +51,7 @@ export default function GuestHome() {
               color={colorSet.colorText}
               action={() => {
                 console.log('Google login');
-                alertContext.alerts.push({
-                  message: 'Cette fonctionnalité sera disponible bientôt.',
-                  type: 'error',
-                });
+                setIsGoogleAuth(true);
               }}>
               <GoogleIcon width={20} height={20} />
             </Button>
@@ -79,6 +79,7 @@ export default function GuestHome() {
             </View>
           </View>
         </View>
+        {isGoogleAuth ? <GoogleAuth /> : null}
       </View>
     );
   }

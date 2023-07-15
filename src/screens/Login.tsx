@@ -5,9 +5,9 @@ import LoginHeader from '../components/headers/LoginHeader';
 import Field from '../components/Field';
 import { useState } from 'react';
 import Button from '../components/Button';
-import { AppStackParamList } from '../../App';
+import { AppStackNavigation, AppStackParamList } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import axios from 'axios';
 import { EXPO_PUBLIC_API_URL } from '@env';
@@ -57,8 +57,8 @@ export default function Login() {
   const [isPasswordStep, setIsPasswordStep] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const { auth, setAuth } = useContext(AuthContext);
-  const navigation = useNavigation<AppStackParamList>();
-
+  const navigation = useNavigation<AppStackNavigation>();
+  
   if (!fontsLoaded) {
     return null;
   }
