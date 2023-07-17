@@ -2,15 +2,17 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
 import Home from '../screens/Home';
 import HomeIcon from '../../assets/icons/menu/Home.svg';
+import AgendaIcon from '../../assets/icons/menu/Agenda.svg';
 import { colorSet } from '../styles/style';
-import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { UserContext } from '../contexts/UserContext';
 import Loading from '../screens/Loading';
+import Agenda from '../screens/Agenda';
 
 export type UserSpaceParamList = {
   Home: undefined;
+  Agenda: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -46,12 +48,12 @@ const routes: Array<React.ComponentProps<typeof Tab.Screen>> = [
     },
   },
   {
-    name: 'Loading',
-    component: Loading,
+    name: 'Agenda',
+    component: Agenda,
     options: {
-      tabBarLabel: 'Chargement',
+      tabBarLabel: 'Agenda',
       tabBarIcon: ({ color, size }) => (
-        <HomeIcon width={size} height={size} fill={color} />
+        <AgendaIcon width={size} height={size} fill={color} />
       ),
     },
   }

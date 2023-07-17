@@ -14,7 +14,7 @@ import EventCard from '../components/calendar/EventCard';
 
 export default function Home() {
   const { user, setUser } = useContext(UserContext);
-  
+
   const [fontsLoaded] = useFonts({
     Inter: require('./../../assets/fonts/Inter-Regular.ttf'),
     'Inter-Black': require('./../../assets/fonts/Inter-Black.ttf'),
@@ -39,7 +39,7 @@ export default function Home() {
           location="Salle 1"
           type="school"
           focused={true}
-          link="https://www.google.com"
+          url="https://www.google.com"
         />
         <View
           style={{

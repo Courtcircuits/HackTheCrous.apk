@@ -4,12 +4,12 @@ import { useFonts } from "expo-font";
 
 export type EventType = 'school' | 'personal';
 
-interface EventCardProps {
+export interface EventCardProps {
   title: string;
   timeStart: string;
   timeEnd: string;
   location: string;
-  link: string;
+  url: string;
   type: EventType;
   focused: boolean;
 }
@@ -52,7 +52,7 @@ export default function (props: EventCardProps){
 
 const styles = StyleSheet.create({
   card: {
-    marginVertical: 10,
+    marginVertical:3,
     width: '100%',
     paddingHorizontal: 10,
     paddingVertical: 7,
