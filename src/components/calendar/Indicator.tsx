@@ -1,8 +1,10 @@
+import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import { colorSet } from "../../styles/style";
 
 type IndicatorProps = {
   date: Date
+  setOffsetY?: (offsetY: number) => void
 }
 
 function getEventDay(day: Date): string{
@@ -10,11 +12,23 @@ function getEventDay(day: Date): string{
   return days[day.getDay()];
 }
 
+function hello_world(){
+  console.log("Hello World");
+}
 
-export default function Indicator({date}: IndicatorProps): JSX.Element {
+export default function Indicator({date, setOffsetY}: IndicatorProps): JSX.Element {
   const today = new Date();
   const isToday =  today.getDate() === date.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
-  
+  const refView = React.useRef<View>(null);  
+
+  useEffect(() => {
+    if(setOffsetY){
+      refView.current?.measure((x, y, width, height, pageX, pageY) => {
+        setOffsetY(pageY);
+      });
+    }
+  }, []);
+
   if(isToday){
     return (
       <View  style={{
@@ -22,7 +36,9 @@ export default function Indicator({date}: IndicatorProps): JSX.Element {
         flexDirection:"column",
         alignItems:"center",
         paddingTop: 7
-      }}>
+      }}
+      ref={refView}
+      >
         <Text style={{
           fontFamily: 'Inter',
           color: colorSet.colorPrimary,

@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   button: {
     borderWidth: 1,
     fontFamily: 'Inter',
-    borderRadius: 100,
+    borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

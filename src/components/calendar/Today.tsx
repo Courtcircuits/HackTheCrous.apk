@@ -8,7 +8,7 @@ import Indicator from './Indicator';
 type DayProps = {
   day: Date;
   events: EventCardProps[];
-  addOffsetY: (offsetY: number) => void;
+  setOffsetY: (offsetY: number) => void;
 };
 
 function getMonthName(month: number): string {
@@ -17,16 +17,16 @@ function getMonthName(month: number): string {
 }
 
 function Day(props: DayProps): JSX.Element{
-  const { day, events, addOffsetY } = props;
+  const { day, events, setOffsetY } = props;
   const refView = React.useRef<View>(null);
-
   useEffect(() => {
-    if (refView.current) {
-      refView.current.measure((x, y, width, height, pageX, pageY) => {
-        addOffsetY(height);
-      });
-    }
-  });
+    refView.current?.measure((x, y, width, height, pageX, pageY) => {
+      console.log('pageY', pageY);
+      console.log('height', height);
+      console.log('y', y);
+      setOffsetY(pageY + height);
+    });
+  },[refView.current]);
 
   return (
     <View style={{
@@ -34,7 +34,6 @@ function Day(props: DayProps): JSX.Element{
       flexDirection: 'column',
       alignItems: 'center',
     }}
-
       ref={refView}
     >
       <Text style={{
