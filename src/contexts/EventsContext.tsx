@@ -75,92 +75,92 @@ export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
     end: new Date(Date.now() + 86400000 * 7),
   });
 
-  useEffect(() => {
-    async function getEvents(oldEvents: TEvent[]): Promise<TEvent[]> {
-      let data: Period[] = [];
-      if (oldEvents.length == 0) {
-        data.push(
-          ...(await getCalendarOnPeriod(
-            auth.token,
-            boundaries.start,
-            boundaries.end,
-          )),
-        );
-        return data.map(period => {
-          return {
-            timeStart: period.start,
-            timeEnd: period.end,
-            title: period.summary,
-            description: period.description,
-            location: period.location,
-          };
-        });
-      }
+  // useEffect(() => {
+  //   async function getEvents(oldEvents: TEvent[]): Promise<TEvent[]> {
+  //     let data: Period[] = [];
+  //     if (oldEvents.length == 0) {
+  //       data.push(
+  //         ...(await getCalendarOnPeriod(
+  //           auth.token,
+  //           boundaries.start,
+  //           boundaries.end,
+  //         )),
+  //       );
+  //       return data.map(period => {
+  //         return {
+  //           timeStart: period.start,
+  //           timeEnd: period.end,
+  //           title: period.summary,
+  //           description: period.description,
+  //           location: period.location,
+  //         };
+  //       });
+  //     }
 
-      const minDateOfEvents: TEvent = oldEvents.reduce(
-        (prev: TEvent, cur: TEvent) => {
-          return prev.timeStart < cur.timeStart ? prev : cur;
-        },
-      );
+  //     const minDateOfEvents: TEvent = oldEvents.reduce(
+  //       (prev: TEvent, cur: TEvent) => {
+  //         return prev.timeStart < cur.timeStart ? prev : cur;
+  //       },
+  //     );
 
-      const maxDateOfEvents: TEvent = oldEvents.reduce(
-        (prev: TEvent, cur: TEvent) => {
-          return prev.timeEnd > cur.timeEnd ? prev : cur;
-        },
-      );
+  //     const maxDateOfEvents: TEvent = oldEvents.reduce(
+  //       (prev: TEvent, cur: TEvent) => {
+  //         return prev.timeEnd > cur.timeEnd ? prev : cur;
+  //       },
+  //     );
 
-      const newEvents: TEvent[] = oldEvents;
+  //     const newEvents: TEvent[] = oldEvents;
 
-      let newEventsToInsertBefore: TEvent[] = [];
-      let newEventsToInsertAfter: TEvent[] = [];
+  //     let newEventsToInsertBefore: TEvent[] = [];
+  //     let newEventsToInsertAfter: TEvent[] = [];
 
-      if (minDateOfEvents.timeStart < boundaries.start) {
-        data.push(
-          ...(await getCalendarOnPeriod(
-            auth.token,
-            minDateOfEvents.timeStart,
-            boundaries.start,
-          )),
-        );
-        newEventsToInsertBefore = data.map(period => {
-          console.log(period.start);
-          return {
-            timeStart: period.start,
-            timeEnd: period.end,
-            title: period.summary,
-            description: period.description,
-            location: period.location,
-          };
-        });
-      }
-      if (maxDateOfEvents.timeStart > boundaries.end) {
-        data.push(
-          ...(await getCalendarOnPeriod(
-            auth.token,
-            boundaries.end,
-            minDateOfEvents.timeEnd,
-          )),
-        );
-        newEventsToInsertAfter = data.map(period => {
-          return {
-            timeStart: period.start,
-            timeEnd: period.end,
-            title: period.summary,
-            description: period.description,
-            location: period.location,
-          };
-        });
-      }
-      return [
-        ...newEventsToInsertBefore,
-        ...newEvents,
-        ...newEventsToInsertAfter,
-      ];
-    }
-    getEvents(events).then(newEvents => {
-      setEvents(newEvents);
-    });
-  }, [auth.token, boundaries]);
+  //     if (minDateOfEvents.timeStart < boundaries.start) {
+  //       data.push(
+  //         ...(await getCalendarOnPeriod(
+  //           auth.token,
+  //           minDateOfEvents.timeStart,
+  //           boundaries.start,
+  //         )),
+  //       );
+  //       newEventsToInsertBefore = data.map(period => {
+  //         console.log(period.start);
+  //         return {
+  //           timeStart: period.start,
+  //           timeEnd: period.end,
+  //           title: period.summary,
+  //           description: period.description,
+  //           location: period.location,
+  //         };
+  //       });
+  //     }
+  //     if (maxDateOfEvents.timeStart > boundaries.end) {
+  //       data.push(
+  //         ...(await getCalendarOnPeriod(
+  //           auth.token,
+  //           boundaries.end,
+  //           minDateOfEvents.timeEnd,
+  //         )),
+  //       );
+  //       newEventsToInsertAfter = data.map(period => {
+  //         return {
+  //           timeStart: period.start,
+  //           timeEnd: period.end,
+  //           title: period.summary,
+  //           description: period.description,
+  //           location: period.location,
+  //         };
+  //       });
+  //     }
+  //     return [
+  //       ...newEventsToInsertBefore,
+  //       ...newEvents,
+  //       ...newEventsToInsertAfter,
+  //     ];
+  //   }
+  //   getEvents(events).then(newEvents => {
+  //     setEvents(newEvents);
+  //   });
+  // }, [auth.token, boundaries]);
 
   return (
     <EventsContext.Provider

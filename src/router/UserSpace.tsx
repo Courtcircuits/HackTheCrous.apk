@@ -96,26 +96,25 @@ export default function UserSpace(): JSX.Element {
     return <Text>Error :(</Text>;
   }
   return (
-    // <EventsProvider>
-    //   <Tab.Navigator
-    //     initialRouteName="Home"
-    //     screenOptions={{
-    //       headerShown: false,
-    //       tabBarActiveTintColor: colorSet.colorText,
-    //       tabBarInactiveTintColor: colorSet.colorTextMuted,
-    //       tabBarStyle: {
-    //         backgroundColor: colorSet.colorBackground,
-    //         borderTopWidth: 0,
-    //       },
-    //       tabBarLabelStyle: {
-    //         fontFamily: 'Inter',
-    //       },
-    //     }}>
-    //     {routes.map(route => (
-    //       <Tab.Screen key={route.name} {...route} />
-    //     ))}
-    //   </Tab.Navigator>
-    // </EventsProvider>
-    <Text>{JSON.stringify(user)}</Text>
+    <EventsProvider>
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: colorSet.colorText,
+          tabBarInactiveTintColor: colorSet.colorTextMuted,
+          tabBarStyle: {
+            backgroundColor: colorSet.colorBackground,
+            borderTopWidth: 0,
+          },
+          tabBarLabelStyle: {
+            fontFamily: 'Inter',
+          },
+        }}>
+        {routes.map(route => (
+          <Tab.Screen key={route.name} {...route} />
+        ))}
+      </Tab.Navigator>
+    </EventsProvider>
   );
 }

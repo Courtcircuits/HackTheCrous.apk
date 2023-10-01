@@ -20,7 +20,7 @@ export const AuthContext = React.createContext<{
 
 export function AuthContextProvider(props: {
   children: React.ReactNode;
-}): JSX.Element {
+}) {
   const [auth, setAuth] = React.useState<Auth>({
     refreshToken: '',
     token: '',

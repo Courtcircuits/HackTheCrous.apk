@@ -12,9 +12,6 @@ export const AlertContext = createContext({
 });
 
 export function AlertContextProvider({ children }: { children: React.ReactNode}) { 
-
-
-
   return (
     <AlertContext.Provider value={{ alerts: [] }}>
       {children}

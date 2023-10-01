@@ -13,7 +13,7 @@ import { useFonts } from 'expo-font';
 import EventCard from '../components/calendar/EventCard';
 
 export default function Home() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const [fontsLoaded] = useFonts({
     Inter: require('./../../assets/fonts/Inter-Regular.ttf'),
