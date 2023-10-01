@@ -1,5 +1,5 @@
 import { AppRegistry } from 'react-native';
-import React  from 'react';
+import React from 'react';
 import GuestHome from './src/screens/GuestHome';
 import Login from './src/screens/Login';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +13,7 @@ import UserDataProvisionner from './src/utils/UserDataProvisionner';
 import { useFonts } from 'expo-font';
 
 export type AppStackParamList = {
+  navigate(arg0: string): unknown;
   GuestHome: undefined;
   Login: undefined;
   Register: undefined;
@@ -24,7 +25,7 @@ export type AppStackNavigation = {
   navigate: (screen: keyof AppStackParamList) => void;
   push: (screen: keyof AppStackParamList) => void;
   goBack: () => void;
-}
+};
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -43,7 +44,7 @@ const routes: Array<React.ComponentProps<typeof Stack.Screen>> = [
   },
   {
     name: 'UserDataProvisionner',
-    component: UserDataProvisionner
+    component: UserDataProvisionner,
   },
   {
     name: 'UserSpace',
@@ -61,28 +62,26 @@ export default function App(): JSX.Element {
     return <></>;
   }
 
-
-   return (
-   <AuthContextProvider>
-    <UserContextProvider>
-      <ApolloClientProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-              animation: 'none',
-              gestureEnabled: false,
-            }}>
-            {routes.map(route => (
-              <Stack.Screen key={route.name} {...route} />
-            ))}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ApolloClientProvider>
-    </UserContextProvider>
-  </AuthContextProvider>
+  return (
+    <NavigationContainer>
+      <AuthContextProvider>
+        <UserContextProvider>
+          <ApolloClientProvider>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                animation: 'none',
+                gestureEnabled: false,
+              }}>
+              {routes.map(route => (
+                <Stack.Screen key={route.name} {...route} />
+              ))}
+            </Stack.Navigator>
+          </ApolloClientProvider>
+        </UserContextProvider>
+      </AuthContextProvider>
+    </NavigationContainer>
   );
 }
 
 AppRegistry.registerComponent('App', () => App);
-

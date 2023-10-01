@@ -1,4 +1,4 @@
-{ 
+{
   "name": "hackthecrous",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
@@ -9,12 +9,16 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.17",
+    "@apollo/client": "^3.8.4",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
+    "@types/react-native": "^0.71.8",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-link": "^1.2.14",
     "apollo-link-context": "^1.0.20",
+    "apollo-link-http": "^1.5.17",
     "axios": "^1.4.0",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
@@ -35,9 +39,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@types/react": "~18.0.14",
+    "@tsconfig/react-native": "^3.0.2",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.8.0",
+    "@types/react": "~18.2.0",
+    "@types/react-dom": "18.2.0",
+    "@types/react-test-renderer": "^18.0.3",
     "react-native-svg-transformer": "^1.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "private": true
 }

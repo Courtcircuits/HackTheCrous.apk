@@ -5,7 +5,7 @@ import Logo from "../../assets/icons/logo-hacl.svg";
 import { colorSet } from "../styles/style";
 
 
-export default function Loading(): JSX.Element {
+export default function Loading(): JSX.Element{
   const [doABarrelRollAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
@@ -46,13 +46,13 @@ export default function Loading(): JSX.Element {
 function LoadingText(): JSX.Element {
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  function increase_count(){
       setCount((count) => count + 1);
-    }, 1000);
+  }
 
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(() => {
+    setTimeout(increase_count, 1000);
+  }, [increase_count]);
 
 
   if(count % 3 == 0) {

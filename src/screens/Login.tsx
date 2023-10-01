@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import axios from 'axios';
-import { EXPO_PUBLIC_API_URL } from '@env';
 import { AuthContext } from '../contexts/AuthContext';
 
 interface AuthResponse {
@@ -27,7 +26,7 @@ async function authenticate(
   remember: boolean,
 ): Promise<AuthResponse> {
   try {
-    const res = await axios.post(`${EXPO_PUBLIC_API_URL}/login`, {
+    const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
       mail: email,
       password: password,
       remember: remember,
@@ -73,7 +72,6 @@ export default function Login() {
           </Text>
           <Field
             type="emailAddress"
-            autoComplete="email"
             placeholder="Email"
             value={email}
             onChange={text => {
@@ -105,11 +103,12 @@ export default function Login() {
             action={() => {
               const res = authenticate(email, password, false);
               res.then(data => {
-                setAuth({
-                  refreshToken: data.refreshToken ? data.refreshToken : '',
-                  token: data.token,
+                setAuth(auth => {
+                  return {
+                    refreshToken: data.refreshToken ? data.refreshToken : '',
+                    token: data.token,
+                  };
                 });
-                navigation.navigate('UserSpace');
               });
             }}
           />
@@ -124,7 +123,6 @@ export default function Login() {
         <LoginHeader />
         <Text style={styles.heading}>Pour commencer, entre ton mail</Text>
         <Field
-          autoComplete="email"
           type="emailAddress"
           placeholder="Email"
           value={email}

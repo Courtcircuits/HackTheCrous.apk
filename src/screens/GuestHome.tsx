@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import GoogleIcon from './../../assets/icons/google-icon.svg';
 import HomeHeader from './../components/headers/HomeHeader';
@@ -9,6 +9,41 @@ import { useNavigation } from '@react-navigation/native';
 import { AppStackNavigation, AppStackParamList } from '../../App';
 import { UserContext } from '../contexts/UserContext';
 import { AlertContext } from '../contexts/AlertContext';
+import axios, { AxiosError } from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+
+
+interface AuthResponse {
+  type: string;
+  messsage: string;
+  token: string;
+  refreshToken?: string;
+  mail: string;
+}
+
+async function authenticate(
+  email: string,
+  password: string,
+  remember: boolean,
+): Promise<AuthResponse> {
+  try {
+    const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
+      mail: email,
+      password: password,
+      remember: remember,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error(JSON.stringify(error));
+    return {
+      type: 'error',
+      messsage: 'Une erreur est survenue',
+      token: '',
+      mail: '',
+    };
+  }
+}
 
 export default function GuestHome() {
   const [fontsLoaded] = useFonts({
@@ -21,12 +56,10 @@ export default function GuestHome() {
 
   const [wantsToLogin, setWantsToLogin] = useState(false);
 
-  const navigation = useNavigation<AppStackNavigation>();
-  const alertContext = useContext(AlertContext);
 
-  if (user.logged) {
-    navigation.navigate('UserSpace');
-  }
+  const { auth, setAuth } = useContext(AuthContext);
+
+  const navigation = useNavigation<AppStackNavigation>();
 
   if (!fontsLoaded) {
     return null;
@@ -48,9 +81,14 @@ export default function GuestHome() {
               color={colorSet.colorText}
               action={() => {
                 console.log('Google login');
-                alertContext.alerts.push({
-                  message: 'Cette fonctionnalité sera disponible bientôt.',
-                  type: 'error',
+
+                const res = authenticate('tristan-mihai.radulescu@etu.umontpellier.fr', '12341234', false);
+                res.then(data => {
+                  setAuth((auth)=>{
+                    return {
+                    refreshToken: data.refreshToken ? data.refreshToken : '',
+                    token: data.token,
+                  }});
                 });
               }}>
               <GoogleIcon width={20} height={20} />
