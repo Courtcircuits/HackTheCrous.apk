@@ -9,6 +9,14 @@ export interface School {
   coords: Coords;
 }
 
+export interface GqlEvent{
+  start: string;
+  end: string;
+  summary: string;
+  location: string;
+  description: string;
+}
+
 export interface User {
   mail: string;
   token: string;
@@ -21,6 +29,14 @@ export interface User {
   refreshToken: string;
   refreshingToken: boolean;
   avatar: string;
+}
+
+export interface TEvent{
+  start: Date;
+  end: Date;
+  summary: string;
+  location: string;
+  description: string;
 }
 
 export interface Food {

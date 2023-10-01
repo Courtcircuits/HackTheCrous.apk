@@ -96,7 +96,6 @@ export default function UserSpace(): JSX.Element {
     return <Text>Error :(</Text>;
   }
   return (
-    <EventsProvider>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -115,6 +114,5 @@ export default function UserSpace(): JSX.Element {
           <Tab.Screen key={route.name} {...route} />
         ))}
       </Tab.Navigator>
-    </EventsProvider>
   );
 }

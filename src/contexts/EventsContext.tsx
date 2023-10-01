@@ -1,7 +1,10 @@
-import { gql } from '@apollo/client';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { ApolloQueryResult, gql, useQuery } from '@apollo/client';
+import React, { useContext, useEffect, useState } from 'react';
 import { createApolloClient } from '../utils/ApolloClient';
 import { AuthContext } from './AuthContext';
+import { TEvent } from '../../types/types';
+import { parseDateGql } from '../utils/DateUtil';
+import { Text } from 'react-native';
 
 const GET_CALENDAR_ON_PERIOD = gql`
   query Period($start: Date, $end: Date) {
@@ -15,167 +18,46 @@ const GET_CALENDAR_ON_PERIOD = gql`
   }
 `;
 
-export type TEvent = {
-  timeStart: Date;
-  timeEnd: Date;
-  title: string;
-  description: string;
-  location: string;
-};
-
-export type Boundaries = {
-  start: Date;
-  end: Date;
-};
-
-export type Period = {
-  start: Date;
-  end: Date;
-  summary: string;
-  description: string;
-  location: string;
-};
-
 const getCalendarOnPeriod = async (
   token: string,
   start: Date,
   end: Date,
-): Promise<Period[]> => {
+): Promise<TEvent[]> => {
   const client = createApolloClient(token);
-  const { data } = await client.query({
-    query: GET_CALENDAR_ON_PERIOD,
-    variables: {
-      start,
-      end,
-    },
-  });
-  return data.period;
+  const start_string = parseDateGql(start);
+  const end_string = parseDateGql(end);
+  console.log('auth token : ' + token);
+  try {
+    const result: ApolloQueryResult<{ period: TEvent[] }> = await client.query({
+      query: GET_CALENDAR_ON_PERIOD,
+      variables: {
+        start: '01-Nov-2023',
+        end: '31-Nov-2023',
+      },
+    });
+    console.log(result);
+    return result.data.period;
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
 };
 
-export const EventsContext = createContext<{
+export const EventsContext = React.createContext<{
   events: TEvent[];
-  setEvents: (events: TEvent[]) => void;
-  boundaries: Boundaries;
-  setBoundaries: (boundaries: Boundaries) => void;
+  setEvents: (eventscb: (events: TEvent[]) => TEvent[]) => void;
 }>({
   events: [],
-  setEvents: () => {},
-  boundaries: {
-    start: new Date(Date.now() - 86400000 * 7),
-    end: new Date(Date.now() + 86400000 * 7),
-  },
-  setBoundaries: () => {},
+  setEvents: (eventscb: (events: TEvent[]) => TEvent[]) => {},
 });
 
-export const EventsProvider = ({ children }: { children: React.ReactNode }) => {
+export function EventsProvider({ children }: { children: React.ReactNode }) {
   const { auth } = useContext(AuthContext);
   const [events, setEvents] = useState<TEvent[]>([]);
-  const [boundaries, setBoundaries] = useState<Boundaries>({
-    start: new Date(Date.now() - 86400000 * 7),
-    end: new Date(Date.now() + 86400000 * 7),
-  });
-
-  // useEffect(() => {
-  //   async function getEvents(oldEvents: TEvent[]): Promise<TEvent[]> {
-  //     let data: Period[] = [];
-  //     if (oldEvents.length == 0) {
-  //       data.push(
-  //         ...(await getCalendarOnPeriod(
-  //           auth.token,
-  //           boundaries.start,
-  //           boundaries.end,
-  //         )),
-  //       );
-  //       return data.map(period => {
-  //         return {
-  //           timeStart: period.start,
-  //           timeEnd: period.end,
-  //           title: period.summary,
-  //           description: period.description,
-  //           location: period.location,
-  //         };
-  //       });
-  //     }
-
-  //     const minDateOfEvents: TEvent = oldEvents.reduce(
-  //       (prev: TEvent, cur: TEvent) => {
-  //         return prev.timeStart < cur.timeStart ? prev : cur;
-  //       },
-  //     );
-
-  //     const maxDateOfEvents: TEvent = oldEvents.reduce(
-  //       (prev: TEvent, cur: TEvent) => {
-  //         return prev.timeEnd > cur.timeEnd ? prev : cur;
-  //       },
-  //     );
-
-  //     const newEvents: TEvent[] = oldEvents;
-
-  //     let newEventsToInsertBefore: TEvent[] = [];
-  //     let newEventsToInsertAfter: TEvent[] = [];
-
-  //     if (minDateOfEvents.timeStart < boundaries.start) {
-  //       data.push(
-  //         ...(await getCalendarOnPeriod(
-  //           auth.token,
-  //           minDateOfEvents.timeStart,
-  //           boundaries.start,
-  //         )),
-  //       );
-  //       newEventsToInsertBefore = data.map(period => {
-  //         console.log(period.start);
-  //         return {
-  //           timeStart: period.start,
-  //           timeEnd: period.end,
-  //           title: period.summary,
-  //           description: period.description,
-  //           location: period.location,
-  //         };
-  //       });
-  //     }
-  //     if (maxDateOfEvents.timeStart > boundaries.end) {
-  //       data.push(
-  //         ...(await getCalendarOnPeriod(
-  //           auth.token,
-  //           boundaries.end,
-  //           minDateOfEvents.timeEnd,
-  //         )),
-  //       );
-  //       newEventsToInsertAfter = data.map(period => {
-  //         return {
-  //           timeStart: period.start,
-  //           timeEnd: period.end,
-  //           title: period.summary,
-  //           description: period.description,
-  //           location: period.location,
-  //         };
-  //       });
-  //     }
-  //     return [
-  //       ...newEventsToInsertBefore,
-  //       ...newEvents,
-  //       ...newEventsToInsertAfter,
-  //     ];
-  //   }
-  //   getEvents(events).then(newEvents => {
-  //     setEvents(newEvents);
-  //   });
-  // }, [auth.token, boundaries]);
 
   return (
-    <EventsContext.Provider
-      value={{ events, setEvents, boundaries, setBoundaries }}>
+    <EventsContext.Provider value={{ events, setEvents }}>
       {children}
     </EventsContext.Provider>
   );
-};
-
-export type Event = {
-  timeStart: Date;
-  timeEnd: Date;
-  title: string;
-  description: string;
-  location: string;
-  focused: boolean;
-  url: string;
-};
+}

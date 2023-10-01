@@ -1,13 +1,17 @@
 import Day from '../components/calendar/Day';
 import { colorSet } from '../styles/style';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import AgendaHeader from '../components/headers/AgendaHeader';
-import { EventCardProps, EventType } from '../components/calendar/EventCard';
+import EventCard, {
+  EventCardProps,
+  EventType,
+} from '../components/calendar/EventCard';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { EventsContext, TEvent } from '../contexts/EventsContext';
+import { EventsContext, EventsProvider } from '../contexts/EventsContext';
 import Today from '../components/calendar/Today';
+import Calendar from '../components/Calendar';
 
 type AgendaData = {
   date: Date;
@@ -22,10 +26,12 @@ function fromDateToStringHour(date: Date): string {
 export default function Agenda(): JSX.Element {
   const [focusedDate, setFocusedDate] = useState<Date>(new Date());
 
-
   return (
     <View style={styles.container}>
       <AgendaHeader date={focusedDate} />
+      <EventsProvider>
+        <Calendar />
+      </EventsProvider>
     </View>
   );
 }
