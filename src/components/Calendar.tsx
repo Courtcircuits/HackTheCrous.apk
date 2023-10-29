@@ -1,15 +1,11 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { EventsContext, EventsProvider } from '../contexts/EventsContext';
-import Agenda from '../screens/Agenda';
-import EventCard from './calendar/EventCard';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { GqlEvent, TEvent } from '../../types/types';
-import Button from './Button';
 import { parseDateGql } from '../utils/DateUtil';
-import { parse } from 'path';
-import { start } from 'repl';
-import { colorSet } from '../styles/style';
+import LoadingBar from './LoadingBar';
+import Legend from './Legend';
+import EventContainer from './calendar/EventContainer';
 
 function mapGqlPeriod(period: GqlEvent): TEvent {
   return {
@@ -38,11 +34,16 @@ interface Limits {
   end: Date;
 }
 
-export default function Calendar() {
-  const { events, setEvents } = useContext(EventsContext);
+interface DisplayableEvent {
+  event: TEvent;
+  firstOfDay: boolean;
+}
+
+export default function Calendar({ navigation }: { navigation: any }) {
+  const [events, setEvents] = useState<DisplayableEvent[]>([]);
   const now = new Date();
-  const lastWeek = new Date(now.valueOf() - 86400000 * 14);
-  const aWeek = new Date(now.valueOf() + 86400000 * 14);
+  const lastWeek = new Date(now.valueOf() - 86400000 * 150);
+  const aWeek = new Date(now.valueOf() + 86400000 * 150);
   const [focusedDateIndex, setFocusedDateIndex] = useState<number | null>(null);
 
   const refList = useRef<FlatList>(null);
@@ -53,7 +54,7 @@ export default function Calendar() {
     start: lastWeek,
   });
 
-  const { loading, error, data, refetch } = useQuery(GET_CALENDAR_ON_PERIOD, {
+  const { loading, error, refetch } = useQuery(GET_CALENDAR_ON_PERIOD, {
     variables: {
       start: parseDateGql(limits.start),
       end: parseDateGql(limits.end),
@@ -63,22 +64,19 @@ export default function Calendar() {
     },
     onCompleted(data: { period: GqlEvent[] }) {
       let beenSet = false;
+      let item: TEvent;
+      let sortedPeriod = data.period.map(event => event)
+      sortedPeriod = sortedPeriod.sort((a, b) => {
+        return new Date(a.start).valueOf() - new Date(b.start).valueOf();
+      });
       if (events.length === 0) {
-        let item: TEvent;
         for (let index = 0; index < data.period.length; index++) {
-          item = mapGqlPeriod(data.period[index]);
+          item = mapGqlPeriod(sortedPeriod[index]);
           if (!beenSet) {
             if (item.start.toDateString() === now.toDateString()) {
-              console.log('index : ' + index);
-              console.log('start  : ' + item.start);
-              console.log(now);
               setFocusedDateIndex(index);
               beenSet = true;
             } else if (item.start.valueOf() > now.valueOf()) {
-              console.log(index);
-
-              console.log('start item : ', item.start.toDateString());
-              console.log(now.toDateString());
               setFocusedDateIndex(index);
               beenSet = true;
             }
@@ -86,12 +84,45 @@ export default function Calendar() {
         }
       }
 
-      if (data.period != null) {
+      let start: Date;
+      let beforeStart: Date;
+      if (sortedPeriod != null) {
+        const newPeriod= sortedPeriod.map((event: GqlEvent, index: number) => {
+                let focusedDay = false;
+                if (index > 0) {
+                  start = new Date(event.start);
+                  beforeStart = new Date(data.period[index - 1].start);
+                  focusedDay =
+                    start.getDate() != beforeStart.getDate() ||
+                    start.getMonth() != beforeStart.getMonth() ||
+                    start.getFullYear() != beforeStart.getFullYear();
+                } else {
+                  focusedDay = true;
+                }
+                return {
+                  event: mapGqlPeriod(event),
+                  firstOfDay: focusedDay,
+                };
+              })
         setEvents(oldEvents => {
-          return [
-            ...oldEvents,
-            ...data.period.map((event: GqlEvent) => mapGqlPeriod(event)),
-          ];
+          console.log(oldEvents.length)
+          if(oldEvents.length === 0) {
+            return newPeriod
+          }
+          if (
+            oldEvents[oldEvents.length - 1].event.start.valueOf() <=
+            new Date(data.period[0].start).valueOf()
+          ) {
+            return [
+              ...oldEvents,
+              ...newPeriod
+            ];
+          }else {
+            return [
+              ...newPeriod,
+              ...oldEvents
+            ]
+          }
         });
       }
     },
@@ -104,23 +135,21 @@ export default function Calendar() {
     });
   }, [limits]);
 
-//   useEffect(() => {
-//     if (refList.current != null && !loading) {
-//       refList.current.scrollToIndex({
-//         index: focusedDateIndex || 0,
-//         viewPosition: 1,
-//         animated: true,
-//       });
-//     }
-//   }, [focusedDateIndex]);
-
   if (error) {
     return <Text>Error :( {error.message}</Text>;
   }
 
+  let loadingComp;
+  if (loading) {
+    loadingComp = <LoadingBar />;
+  }
+
   return (
     <View style={styles.container}>
+      {loadingComp}
       <FlatList
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
         data={events}
         initialNumToRender={60}
         initialScrollIndex={focusedDateIndex}
@@ -128,41 +157,55 @@ export default function Calendar() {
         getItemLayout={(data, index) => {
           return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index };
         }}
-        renderItem={({ item, index }: { item: TEvent; index: number }) => {
+        ListHeaderComponent={<Legend>Scroll vers le haut pour plus</Legend>}
+        ListFooterComponent={<Legend>Scroll vers le bas pour plus</Legend>}
+        renderItem={({
+          item,
+          index,
+        }: {
+          item: DisplayableEvent;
+          index: number;
+        }) => {
           return (
-            <EventCard
-              location={item.location}
+            <EventContainer
+              location={item.event.location}
               focused={index === focusedDateIndex}
-              timeEnd={item.end.toDateString()}
-              timeStart={item.start.toDateString()}
-              title={item.summary}
+              timeEnd={item.event.end}
+              timeStart={item.event.start}
+              title={item.event.summary}
               type="school"
-              url={item.summary}
-              key={item.start.valueOf()}></EventCard>
+              url={item.event.summary}
+              key={item.event.start.valueOf()}
+              firstOfDay={item.firstOfDay}
+              navigation={navigation}
+              focusedDay={
+                item.firstOfDay && index === focusedDateIndex
+              }></EventContainer>
           );
         }}
-        onScroll={event => {
-          if (event.nativeEvent.contentOffset.y < 0) {
-            if (!loading) {
-              setLimits(oldLimits => {
-                return {
-                  start: new Date(oldLimits.start.valueOf() - 86400000 * 7),
-                  end: new Date(oldLimits.start.valueOf() - 86400000),
-                };
-              });
-            }
-          }
-        }}
-        onEndReached={() => {
-          if (!loading) {
-            setLimits(oldLimits => {
-              return {
-                start: new Date(oldLimits.end.valueOf() + 86400000),
-                end: new Date(oldLimits.end.valueOf() + 86400000 * 7),
-              };
-            });
-          }
-        }}
+        // onScroll={event => {
+        //   if (event.nativeEvent.contentOffset.y < 0) {
+        //     if (!loading) {
+        //       setLimits(oldLimits => {
+        //         return {
+        //           start: new Date(oldLimits.start.valueOf() - 86400000 * 30),
+        //           end: new Date(oldLimits.start.valueOf() - 86400000),
+        //         };
+        //       });
+        //     }
+        //   }
+        // }}
+        // onEndReached={() => {
+        //   if (!loading) {
+        //     console.log("end reached")
+        //     setLimits(oldLimits => {
+        //       return {
+        //         start: new Date(oldLimits.end.valueOf() + 86400000),
+        //         end: new Date(oldLimits.end.valueOf() + 86400000 * 30),
+        //       };
+        //     });
+        //   }
+        // }}
       />
     </View>
   );

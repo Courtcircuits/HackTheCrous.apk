@@ -2,6 +2,7 @@ import HTCLogo from './../../../assets/icons/logo-hacl.svg';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import React, { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
+import ProfilePicture from '../user/ProfilePicture';
 
 export default function HomeHeader() {
   const { user, setUser } = useContext(UserContext);
@@ -14,10 +15,7 @@ export default function HomeHeader() {
           <HTCLogo width={50} height={50} />
         </View>
         <View style={{ ...styles.element, justifyContent: 'flex-end' }}>
-          <Image
-            source={{ uri: user.avatar }}
-            style={{ width: 45, height: 45, borderRadius: 50 }}
-          />
+          <ProfilePicture/>
         </View>
       </View>
     );

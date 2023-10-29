@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { colorSet } from '../../styles/style';
+import ProfilePicture from '../user/ProfilePicture';
 
 type AgendaHeaderProps = {
   date: Date;
@@ -14,8 +15,6 @@ function getMonth(date: Date): string {
 }
 
 export default function AgendaHeader({ date }: AgendaHeaderProps): JSX.Element {
-  const { user, setUser } = useContext(UserContext);
-
   return (
     <View style={styles.header}>
       <View style={styles.element}>
@@ -43,10 +42,7 @@ export default function AgendaHeader({ date }: AgendaHeaderProps): JSX.Element {
         </TouchableOpacity>
       </View>
       <View style={{ ...styles.element, justifyContent: 'flex-end' }}>
-        <Image
-          source={{ uri: user.avatar }}
-          style={{ width: 45, height: 45, borderRadius: 50 }}
-        />
+        <ProfilePicture/>
       </View>
     </View>
   );

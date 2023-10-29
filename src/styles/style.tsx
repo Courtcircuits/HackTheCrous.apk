@@ -8,6 +8,7 @@ interface ColorScheme {
   colorBackgroundTransparent: string;
   colorBackgroundSoft: string;
   colorBackgroundMute: string;
+  colorBackgroundMuter: string;
 
   colorBorder: string;
   colorShadow: string;
@@ -25,11 +26,13 @@ const basicColorSet = {
   whiteTransparent: 'rgba(255, 255, 255, 0.9)',
   whiteSoft: '#F8F8F8',
   whiteMute: '#F2F2F2',
+  whiteMuter: '#F1F1F1',
 
   black: 'rgb(12,12,12)',
   blackTransparent: 'rgba(12,12,12, 0.9)',
   blackSoft: '#222222',
   blackMute: '#282828',
+  blackMuter: '#1B1B1B',
 
   dividerLight1: 'rgba(60, 60, 60, 0.29)',
   dividerLight2: 'rgba(60, 60, 60, 0.12)',
@@ -57,6 +60,7 @@ if (colorScheme === 'dark') {
     colorBackgroundTransparent: basicColorSet.blackTransparent,
     colorBackgroundSoft: basicColorSet.blackSoft,
     colorBackgroundMute: basicColorSet.blackMute,
+    colorBackgroundMuter: basicColorSet.blackMuter,
 
     colorBorder: basicColorSet.dividerDark2,
     colorShadow: basicColorSet.dividerDark3,
@@ -73,6 +77,7 @@ if (colorScheme === 'dark') {
     colorBackgroundTransparent: basicColorSet.whiteTransparent,
     colorBackgroundSoft: basicColorSet.whiteSoft,
     colorBackgroundMute: basicColorSet.whiteMute,
+    colorBackgroundMuter: basicColorSet.whiteMuter,
 
     colorBorder: basicColorSet.dividerLight2,
     colorShadow: basicColorSet.dividerLight3,

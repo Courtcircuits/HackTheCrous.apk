@@ -8,14 +8,12 @@ import {
 import { EXPO_PUBLIC_API_URL } from '@env';
 import React, { useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { useNavigation } from '@react-navigation/native';
-import { AppStackParamList } from '../../App';
 
 export function createApolloClient(
   token: string,
 ): ApolloClient<NormalizedCacheObject> {
   const httpLink = createHttpLink({
-    uri: `${process.env.EXPO_PUBLIC_API_URL}/graphql`,
+    uri: `${EXPO_PUBLIC_API_URL}/graphql`,
     headers: {
       Authorization: `Bearer ${token}`,
     },

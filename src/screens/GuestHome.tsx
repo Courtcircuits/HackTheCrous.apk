@@ -11,6 +11,7 @@ import { UserContext } from '../contexts/UserContext';
 import { AlertContext } from '../contexts/AlertContext';
 import axios, { AxiosError } from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { EXPO_PUBLIC_API_URL } from '@env';
 
 
 interface AuthResponse {
@@ -27,12 +28,11 @@ async function authenticate(
   remember: boolean,
 ): Promise<AuthResponse> {
   try {
-    const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
+    const res = await axios.post(`${EXPO_PUBLIC_API_URL}/login`, {
       mail: email,
       password: password,
       remember: remember,
     });
-
     return res.data;
   } catch (error: any) {
     console.error(JSON.stringify(error));
@@ -84,6 +84,7 @@ export default function GuestHome() {
 
                 const res = authenticate('tristan-mihai.radulescu@etu.umontpellier.fr', '12341234', false);
                 res.then(data => {
+                  console.log(data)
                   setAuth((auth)=>{
                     return {
                     refreshToken: data.refreshToken ? data.refreshToken : '',

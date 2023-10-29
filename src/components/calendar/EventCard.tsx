@@ -6,15 +6,26 @@ export type EventType = 'school' | 'personal';
 
 export interface EventCardProps {
   title: string;
-  timeStart: string;
-  timeEnd: string;
+  timeStart: Date;
+  timeEnd: Date;
   location: string;
   url: string;
   type: EventType;
   focused: boolean;
+  navigation?: any;
 }
 
-export default function (props: EventCardProps){
+function formatTime(date: Date): string{
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  hours = hours
+  hours = hours ? hours : 24; //not sure what this does
+  let minutesStr = minutes < 10 ? '0'+minutes : minutes;
+  let strTime = hours + ':' + minutesStr ;
+  return strTime;
+}
+
+export default function EventCard(props: EventCardProps){
 
   const [fontLoaded] = useFonts({
     Inter: require('./../../../assets/fonts/Inter-Regular.ttf'),
@@ -43,9 +54,18 @@ export default function (props: EventCardProps){
   }
 
   return(
-      <TouchableOpacity style={cardStyle}>
-        <Text style={[styles.title, textCardStyle]}>{props.title}</Text>
-        <Text style={[styles.subtitle, textCardStyle]}>{props.timeStart} - {props.timeEnd} en {props.location}</Text>
+      <TouchableOpacity style={cardStyle} onPress={() => {
+                props.navigation.navigate('EventScreen', { event: {
+                  summary: props.title,
+                  description: props.url,
+                  start: props.timeStart.valueOf(),
+                  end: props.timeEnd.valueOf(),
+                  location: props.location,
+                    } });
+              }}
+>
+        <Text numberOfLines={1} style={[styles.title, textCardStyle]}>{props.title}</Text>
+        <Text numberOfLines={1} style={[styles.subtitle, textCardStyle]}>{formatTime(new Date(props.timeStart))} - {formatTime(new Date(props.timeEnd))} en {props.location}</Text>
       </TouchableOpacity>
   )
 }
@@ -58,11 +78,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 7,
     borderWidth: 1,
+    display: "flex",
   },
   title: {
     fontFamily: 'Inter-Bold',
     fontSize: 18,
     fontWeight: 'bold',
+    flex: 1,
+    flexWrap:"nowrap"
   },
   subtitle: {
     fontFamily: 'Inter-Light',

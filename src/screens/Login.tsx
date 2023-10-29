@@ -11,6 +11,7 @@ import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { EXPO_PUBLIC_API_URL } from '@env';
 
 interface AuthResponse {
   type: string;
@@ -25,8 +26,9 @@ async function authenticate(
   password: string,
   remember: boolean,
 ): Promise<AuthResponse> {
+  console.log(`authenticating ${email}`)
   try {
-    const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/login`, {
+    const res = await axios.post(`${EXPO_PUBLIC_API_URL}/login`, {
       mail: email,
       password: password,
       remember: remember,

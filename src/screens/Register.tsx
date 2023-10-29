@@ -24,14 +24,8 @@ export default function Register(){
     return null;
   }
 
-  const user = useContext(UserContext);
-  const navigation = useNavigation<AppStackParamList>();
 
-  if (user.logged) {
-    navigation.navigate('Home');
-  }
-
-  return(
+   return(
     <View style={styles.body}>
       <View>
       <LoginHeader />

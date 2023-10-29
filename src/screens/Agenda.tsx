@@ -1,36 +1,48 @@
-import Day from '../components/calendar/Day';
 import { colorSet } from '../styles/style';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { useContext, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
 import AgendaHeader from '../components/headers/AgendaHeader';
-import EventCard, {
-  EventCardProps,
-  EventType,
-} from '../components/calendar/EventCard';
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { EventsContext, EventsProvider } from '../contexts/EventsContext';
-import Today from '../components/calendar/Today';
+import {  EventsProvider } from '../contexts/EventsContext';
 import Calendar from '../components/Calendar';
+import { createStackNavigator } from '@react-navigation/stack';
+import EventScreen from './EventScreen';
+import { TEvent } from '../../types/types';
 
-type AgendaData = {
-  date: Date;
-  events: EventCardProps[];
+
+type AgendaStackParamList = {
+  Calendar: undefined;
+  EventScreen: { event: TEvent } | undefined;
 };
 
-function fromDateToStringHour(date: Date): string {
-  console.log(date);
-  return `${date.getHours()}:${date.getMinutes()}`;
-}
-
+const Stack = createStackNavigator<AgendaStackParamList>();
 export default function Agenda(): JSX.Element {
-  const [focusedDate, setFocusedDate] = useState<Date>(new Date());
+  const [focusedDate ] = useState<Date>(new Date());
+
 
   return (
     <View style={styles.container}>
       <AgendaHeader date={focusedDate} />
       <EventsProvider>
-        <Calendar />
+        <Stack.Navigator screenOptions={
+          {
+            headerShown: false,
+            cardStyle: {
+              backgroundColor: colorSet.colorBackground,
+            },
+          }
+        }>
+          <Stack.Screen name="Calendar" component={Calendar} />
+          <Stack.Screen name="EventScreen" component={EventScreen} initialParams={{
+            event: {
+              summary: '',
+              description: '',
+              start: new Date(),
+              end: new Date(),
+              location: '',
+            },
+          }}/>
+        </Stack.Navigator>
       </EventsProvider>
     </View>
   );

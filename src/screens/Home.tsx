@@ -11,6 +11,9 @@ import { colorSet } from '../styles/style';
 import HomeHeader from '../components/headers/HomeHeader';
 import { useFonts } from 'expo-font';
 import EventCard from '../components/calendar/EventCard';
+import { EXPO_PUBLIC_API_URL } from '@env';
+
+console.log("server is : " + EXPO_PUBLIC_API_URL)
 
 export default function Home() {
   const { user } = useContext(UserContext);
@@ -34,8 +37,8 @@ export default function Home() {
         <Text style={styles.subheading}>Ton prochain cours</Text>
         <EventCard
           title="Cours de mathématiques"
-          timeStart="12:00"
-          timeEnd="14:00"
+          timeStart={new Date()}
+          timeEnd={new Date()}
           location="Salle 1"
           type="school"
           focused={true}

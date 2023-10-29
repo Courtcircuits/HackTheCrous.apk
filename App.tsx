@@ -11,6 +11,7 @@ import UserSpace from './src/router/UserSpace';
 import { ApolloClientProvider } from './src/utils/ApolloClient';
 import UserDataProvisionner from './src/utils/UserDataProvisionner';
 import { useFonts } from 'expo-font';
+import { LoadingContextProvider } from './src/contexts/LoadingContext';
 
 export type AppStackParamList = {
   navigate(arg0: string): unknown;
@@ -67,16 +68,18 @@ export default function App(): JSX.Element {
       <AuthContextProvider>
         <UserContextProvider>
           <ApolloClientProvider>
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-                animation: 'none',
-                gestureEnabled: false,
-              }}>
-              {routes.map(route => (
-                <Stack.Screen key={route.name} {...route} />
-              ))}
-            </Stack.Navigator>
+            <LoadingContextProvider>
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  animation: 'none',
+                  gestureEnabled: false,
+                }}>
+                {routes.map(route => (
+                  <Stack.Screen key={route.name} {...route} />
+                ))}
+              </Stack.Navigator>
+            </LoadingContextProvider>
           </ApolloClientProvider>
         </UserContextProvider>
       </AuthContextProvider>
