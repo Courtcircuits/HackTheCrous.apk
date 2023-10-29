@@ -12,6 +12,7 @@ export interface EventCardProps {
   url: string;
   type: EventType;
   focused: boolean;
+  description: string;
   navigation?: any;
 }
 
@@ -57,7 +58,7 @@ export default function EventCard(props: EventCardProps){
       <TouchableOpacity style={cardStyle} onPress={() => {
                 props.navigation.navigate('EventScreen', { event: {
                   summary: props.title,
-                  description: props.url,
+                  description: props.description,
                   start: props.timeStart.valueOf(),
                   end: props.timeEnd.valueOf(),
                   location: props.location,

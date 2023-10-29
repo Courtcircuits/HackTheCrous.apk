@@ -12,6 +12,11 @@ function getEventDay(day: Date): string{
   return days[day.getDay()];
 }
 
+function getEventMonth(day: Date): string{
+  const months = ['JAN','FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'];
+  return months[day.getMonth()];
+}
+
 
 export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
   if(focus){
@@ -43,6 +48,11 @@ export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
           {date.getDate()}
         </Text>
         </View>
+<Text style={{
+          fontFamily: 'Inter',
+          color: colorSet.colorPrimary,
+          fontSize: 12
+        }}>{getEventMonth(date)}</Text>
       </View>
     )
   }
@@ -58,7 +68,7 @@ export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
           fontFamily: 'Inter',
           color: colorSet.colorText,
           opacity: 0.5,
-          fontSize: 12
+          fontSize: 10
         }}>{getEventDay(date)}</Text>
         <View style={{
           borderRadius: 100,
@@ -72,6 +82,13 @@ export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
           {date.getDate()}
         </Text>
         </View>
+<Text style={{
+          fontFamily: 'Inter',
+          color: colorSet.colorText,
+          opacity: 0.5,
+          fontSize: 10
+        }}>{getEventMonth(date)}</Text>
+
      </View>
   )
 }

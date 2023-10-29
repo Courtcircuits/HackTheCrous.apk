@@ -168,6 +168,7 @@ export default function Calendar({ navigation }: { navigation: any }) {
         }) => {
           return (
             <EventContainer
+              description={item.event.description}
               location={item.event.location}
               focused={index === focusedDateIndex}
               timeEnd={item.event.end}

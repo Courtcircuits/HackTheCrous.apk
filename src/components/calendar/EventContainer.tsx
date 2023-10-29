@@ -12,6 +12,7 @@ interface EventContainerProps {
   firstOfDay: boolean;
   focusedDay: boolean;
   navigation?: any;
+  description: string;
 }
 
 export default function EventContainer(props: EventContainerProps) {
@@ -26,6 +27,7 @@ export default function EventContainer(props: EventContainerProps) {
       </View>
       <View style={styles.main}>
         <EventCard
+        description={props.description}
           focused={props.focused}
           location={props.location}
           timeEnd={props.timeEnd}
