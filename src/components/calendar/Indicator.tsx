@@ -7,24 +7,24 @@ type IndicatorProps = {
   focus: boolean
 }
 
-function getEventDay(day: Date): string{
-  const days = ['DIM','LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM'];
+function getEventDay(day: Date): string {
+  const days = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM'];
   return days[day.getDay()];
-}
+} 
 
-function getEventMonth(day: Date): string{
-  const months = ['JAN','FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'];
+function getEventMonth(day: Date): string {
+  const months = ['JAN', 'FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'];
   return months[day.getMonth()];
 }
 
 
-export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
-  if(focus){
+export default function Indicator({ date, focus }: IndicatorProps): JSX.Element {
+  if (focus) {
     return (
-      <View  style={{
-        width:"100%",
-        flexDirection:"column",
-        alignItems:"center",
+      <View style={{
+        width: "100%",
+        flexDirection: "column",
+        alignItems: "center",
         paddingTop: 7
       }}
       >
@@ -41,14 +41,14 @@ export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        <Text style={{
-          fontFamily: 'Inter',
-          color: colorSet.colorBackground,
+          <Text style={{
+            fontFamily: 'Inter',
+            color: colorSet.colorBackground,
           }}>
-          {date.getDate()}
-        </Text>
+            {date.getDate()}
+          </Text>
         </View>
-<Text style={{
+        <Text style={{
           fontFamily: 'Inter',
           color: colorSet.colorPrimary,
           fontSize: 12
@@ -58,38 +58,38 @@ export default function Indicator({date, focus}: IndicatorProps): JSX.Element {
   }
 
   return (
-      <View  style={{
-        width:"100%",
-        flexDirection:"column",
-        alignItems:"center",
-        paddingTop: 7
+    <View style={{
+      width: "100%",
+      flexDirection: "column",
+      alignItems: "center",
+      paddingTop: 7
+    }}>
+      <Text style={{
+        fontFamily: 'Inter',
+        color: colorSet.colorText,
+        opacity: 0.5,
+        fontSize: 10
+      }}>{getEventDay(date)}</Text>
+      <View style={{
+        borderRadius: 100,
+        justifyContent: "center",
+        alignItems: "center",
       }}>
         <Text style={{
           fontFamily: 'Inter',
           color: colorSet.colorText,
-          opacity: 0.5,
-          fontSize: 10
-        }}>{getEventDay(date)}</Text>
-        <View style={{
-          borderRadius: 100,
-          justifyContent: "center",
-          alignItems: "center",
         }}>
-        <Text style={{
-          fontFamily: 'Inter',
-          color: colorSet.colorText,
-          }}>
           {date.getDate()}
         </Text>
-        </View>
-<Text style={{
-          fontFamily: 'Inter',
-          color: colorSet.colorText,
-          opacity: 0.5,
-          fontSize: 10
-        }}>{getEventMonth(date)}</Text>
+      </View>
+      <Text style={{
+        fontFamily: 'Inter',
+        color: colorSet.colorText,
+        opacity: 0.5,
+        fontSize: 10
+      }}>{getEventMonth(date)}</Text>
 
-     </View>
+    </View>
   )
 }
 

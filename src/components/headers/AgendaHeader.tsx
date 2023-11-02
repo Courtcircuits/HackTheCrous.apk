@@ -1,6 +1,4 @@
 import AddIcon from './../../../assets/icons/menu/Add.svg';
-import { useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { colorSet } from '../../styles/style';
 import ProfilePicture from '../user/ProfilePicture';

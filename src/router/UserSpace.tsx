@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
 import Home from '../screens/Home';
 import HomeIcon from '../../assets/icons/menu/Home.svg';
+import RestaurantsIcon from '../../assets/icons/restaurants.svg';
 import AgendaIcon from '../../assets/icons/menu/Agenda.svg';
 import SearchIcon from '../../assets/icons/menu/Search.svg';
 import { colorSet } from '../styles/style';
@@ -13,6 +14,7 @@ import Agenda from '../screens/Agenda';
 import { User } from '../../types/types';
 import { LoadingContext } from '../contexts/LoadingContext';
 import SearchView from '../screens/SearchView';
+import RestaurantsScreen from '../screens/RestaurantsScreen';
 
 export type UserSpaceParamList = {
   Home: undefined;
@@ -62,6 +64,16 @@ const routes: Array<React.ComponentProps<typeof Tab.Screen>> = [
     }
   },
   {
+    name: 'Restaurants',
+    component: RestaurantsScreen,
+    options:{
+      tabBarLabel: 'Restaurants',
+      tabBarIcon: ({color, size}) => (
+        <RestaurantsIcon width={size} height={size} fill={color}/>
+      ),
+    }
+  },
+  {
     name: 'Agenda',
     component: Agenda,
     options: {
@@ -70,7 +82,7 @@ const routes: Array<React.ComponentProps<typeof Tab.Screen>> = [
         <AgendaIcon width={size} height={size} fill={color} />
       ),
     },
-  }
+  },
 ];
 
 export default function UserSpace(): JSX.Element {
