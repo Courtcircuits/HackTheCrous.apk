@@ -27,12 +27,11 @@ export default function RestaurantsHeader(props: {active: number, setFilter: (fi
           <ProfilePicture />
         </View>
       </View>
-      <Filters active={props.active} setFilter={props.setFilter}/>
     </View>
   );
 }
 
-function Filters(props: { active: number, setFilter: (filter: number) => void }) {
+export function Filters(props: { active: number, setFilter: (filter: number) => void }) {
   const filter = ["Tout", "Restos", "Cafet's", "Brasseries"]
   return (
     <View style={styles.filter_container}>
@@ -61,8 +60,6 @@ function Filters(props: { active: number, setFilter: (filter: number) => void })
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: colorSet.colorBackgroundMute,
   },
   header: {
     flexDirection: 'row',
@@ -88,10 +85,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontSize: 15,
     color: colorSet.colorText,
-    borderBottomColor: colorSet.colorPrimary,
-    borderBottomWidth: 1,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
     paddingBottom: 10,
     paddingTop: 5,
   },

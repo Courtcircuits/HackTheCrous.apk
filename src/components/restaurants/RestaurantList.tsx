@@ -1,5 +1,6 @@
-import { FlatList } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import { GqlRestaurant } from '../../screens/RestaurantsScreen';
+import { colorSet } from '../../styles/style';
 import RestaurantCard from './RestaurantCard';
 
 interface PropsRestaurantList {
@@ -33,20 +34,28 @@ function extractFoodNames(meals: { foodies: { names: string[] }[] }[] | null): s
 
 }
 
-export default function RestaurantList(props: PropsRestaurantList): JSX.Element {
-
+export default function RestaurantList({ route }: { route: { params: { restaurants: GqlRestaurant[] } } }): JSX.Element {
   return (
-    <FlatList
-      data={props.restaurants}
-      renderItem={({ item }) => (
-        <RestaurantCard
-          name={item.name}
-          url={item.url}
-          meals={extractFoodNames(item.meals)}
-          distance={Math.floor(Math.random() * 10)}
-        />
-      )}
-      keyExtractor={(item) => item.idrestaurant.toString()}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={route.params.restaurants}
+        renderItem={({ item }) => (
+          <RestaurantCard
+            name={item.name}
+            url={item.url}
+            meals={extractFoodNames(item.meals)}
+            distance={0}
+          />
+        )}
+        keyExtractor={(item) => item.idrestaurant.toString()}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colorSet.colorBackground,
+  },
+});

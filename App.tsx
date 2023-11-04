@@ -57,7 +57,10 @@ export default function App(): JSX.Element {
   const [fontsLoaded] = useFonts({
     Inter: require('./assets/fonts/Inter-Regular.ttf'),
     VT323: require('./assets/fonts/VT323-Regular.ttf'),
+    'Inter-Bold': require('./assets/fonts/Inter-Bold.ttf'),
+    'Inter-Light': require('./assets/fonts/Inter-Light.ttf'),
   });
+
 
   if (!fontsLoaded) {
     return <></>;

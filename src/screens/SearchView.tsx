@@ -47,18 +47,20 @@ export default function SearchView() {
     <View style={styles.container}>
       {loadingComp}
       <SearchHeader />
-      <View style={styles.spacer}></View>
-      <ShareCard />
-      <View style={styles.spacer}></View>
-      <View style={styles.spacer}></View>
-      <Text style={styles.h3}>
-        Recommendations
-      </Text>
-      <View style={styles.spacer}></View>
+
+
       <View style={styles.spacer}></View>
       <FlatList
+        ListHeaderComponent={<View>
+          <View style={styles.spacer}></View>
+          <View style={{ paddingVertical: 10 }}>
+            <ShareCard />
+          </View>
+          <View style={styles.spacer}></View>
+          <Text style={styles.h3}>Recommandations</Text>
+
+        </View>}
         data={recommendations}
-        
         renderItem={({ item }) => (
           <RecommendationCard food={item} />
         )}
@@ -74,13 +76,14 @@ function RecommendationCard(props: { food: Food }) {
     restaurants_names += restaurant.name + ', ';
   });
   return (
-    <TouchableOpacity 
-    onPress={() => { 
-          }}
-    style={{
-      paddingBottom: 20,
-      paddingTop: 20,
-    }}>
+    <TouchableOpacity
+      onPress={() => {
+      }}
+      style={{
+        borderBottomColor: colorSet.colorBackgroundSoft,
+        borderBottomWidth: 1,
+        paddingVertical: 25,
+      }}>
       <Text style={styles.title}>{props.food.names[0]}</Text>
       <Text style={styles.restaurant_name} numberOfLines={1}>{restaurants_names}</Text>
     </TouchableOpacity>
@@ -98,6 +101,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   h3: {
+    paddingVertical: 10,
     fontSize: 20,
     fontWeight: 'bold',
     color: colorSet.colorText,
@@ -113,7 +117,7 @@ const styles = StyleSheet.create({
   },
   restaurant_name: {
     fontSize: 16,
-    paddingTop:5,
+    paddingTop: 5,
     color: colorSet.colorTextMuted,
     flexWrap: 'nowrap',
   },

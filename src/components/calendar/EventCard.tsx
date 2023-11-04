@@ -1,6 +1,7 @@
 import { colorSet } from "../../styles/style";
-import { TouchableOpacity, StyleSheet, Text } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, Animated } from "react-native";
 import { useFonts } from "expo-font";
+import { useEffect, useState } from "react";
 
 export type EventType = 'school' | 'personal';
 
@@ -16,17 +17,19 @@ export interface EventCardProps {
   navigation?: any;
 }
 
-function formatTime(date: Date): string{
+function formatTime(date: Date): string {
   let hours = date.getHours();
   let minutes = date.getMinutes();
   hours = hours
   hours = hours ? hours : 24; //not sure what this does
-  let minutesStr = minutes < 10 ? '0'+minutes : minutes;
-  let strTime = hours + ':' + minutesStr ;
+  let minutesStr = minutes < 10 ? '0' + minutes : minutes;
+  let strTime = hours + ':' + minutesStr;
   return strTime;
 }
 
-export default function EventCard(props: EventCardProps){
+export default function EventCard(props: EventCardProps) {
+
+  const [fadeAnim] = useState(new Animated.Value(0));  // Initial value for opacity: 0
 
   const [fontLoaded] = useFonts({
     Inter: require('./../../../assets/fonts/Inter-Regular.ttf'),
@@ -38,42 +41,52 @@ export default function EventCard(props: EventCardProps){
     return null;
   }
 
-  const primaryColorEvent = props.type == 'school' ? colorSet.colorText : colorSet.colorPrimary;
-  let cardStyle:any;
-  let textCardStyle:any;
+  Animated.timing(fadeAnim, {
+    toValue: 1,
+    duration: 300,
+    useNativeDriver: true,
+  }).start();
 
-  if(props.focused){
-    cardStyle = StyleSheet.flatten([styles.card, {backgroundColor: primaryColorEvent}]);
-    textCardStyle= {color: colorSet.colorBackground};
+  const primaryColorEvent = props.type == 'school' ? colorSet.colorText : colorSet.colorPrimary;
+  let cardStyle: any;
+  let textCardStyle: any;
+
+  if (props.focused) {
+    cardStyle = StyleSheet.flatten([styles.card, { backgroundColor: primaryColorEvent }]);
+    textCardStyle = { color: colorSet.colorBackground };
   } else {
-    cardStyle = StyleSheet.flatten([styles.card, {backgroundColor: 'transparent', borderColor: primaryColorEvent}]);
-    if(props.type == 'school'){
-      textCardStyle= {color: colorSet.colorText};
+    cardStyle = StyleSheet.flatten([styles.card, { backgroundColor: 'transparent', borderColor: primaryColorEvent }]);
+    if (props.type == 'school') {
+      textCardStyle = { color: colorSet.colorText };
     } else {
-      textCardStyle= {color: colorSet.colorPrimary};
+      textCardStyle = { color: colorSet.colorPrimary };
     }
   }
 
-  return(
+  return (
+    <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity style={cardStyle} onPress={() => {
-                props.navigation.navigate('EventScreen', { event: {
-                  summary: props.title,
-                  description: props.description,
-                  start: props.timeStart.valueOf(),
-                  end: props.timeEnd.valueOf(),
-                  location: props.location,
-                    } });
-              }}
->
+        props.navigation.navigate('EventScreen', {
+          event: {
+            summary: props.title,
+            description: props.description,
+            start: props.timeStart.valueOf(),
+            end: props.timeEnd.valueOf(),
+            location: props.location,
+          }
+        });
+      }}
+      >
         <Text numberOfLines={1} style={[styles.title, textCardStyle]}>{props.title}</Text>
         <Text numberOfLines={1} style={[styles.subtitle, textCardStyle]}>{formatTime(new Date(props.timeStart))} - {formatTime(new Date(props.timeEnd))} en {props.location}</Text>
       </TouchableOpacity>
+    </Animated.View>
   )
 }
 
 const styles = StyleSheet.create({
   card: {
-    marginVertical:3,
+    marginVertical: 3,
     width: '100%',
     paddingHorizontal: 10,
     paddingVertical: 7,
@@ -86,7 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     flex: 1,
-    flexWrap:"nowrap"
+    flexWrap: "nowrap"
   },
   subtitle: {
     fontFamily: 'Inter-Light',

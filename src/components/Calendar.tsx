@@ -6,6 +6,8 @@ import { parseDateGql } from '../utils/DateUtil';
 import LoadingBar from './LoadingBar';
 import Legend from './Legend';
 import EventContainer from './calendar/EventContainer';
+import ShimerEventCard from './calendar/ShimerEventCard';
+import ShimerEventContainer from './calendar/ShimerEventContainer';
 
 function mapGqlPeriod(period: GqlEvent): TEvent {
   return {
@@ -47,7 +49,7 @@ export default function Calendar({ navigation }: { navigation: any }) {
   const [focusedDateIndex, setFocusedDateIndex] = useState<number | null>(null);
 
   const refList = useRef<FlatList>(null);
-  const ITEM_HEIGHT = 80;
+  const ITEM_HEIGHT = 62.5;
 
   const [limits, setLimits] = useState<Limits>({
     end: aWeek,
@@ -87,26 +89,25 @@ export default function Calendar({ navigation }: { navigation: any }) {
       let start: Date;
       let beforeStart: Date;
       if (sortedPeriod != null) {
-        const newPeriod= sortedPeriod.map((event: GqlEvent, index: number) => {
-                let focusedDay = false;
-                if (index > 0) {
-                  start = new Date(event.start);
-                  beforeStart = new Date(data.period[index - 1].start);
-                  focusedDay =
-                    start.getDate() != beforeStart.getDate() ||
-                    start.getMonth() != beforeStart.getMonth() ||
-                    start.getFullYear() != beforeStart.getFullYear();
-                } else {
-                  focusedDay = true;
-                }
-                return {
-                  event: mapGqlPeriod(event),
-                  firstOfDay: focusedDay,
-                };
-              })
+        const newPeriod = sortedPeriod.map((event: GqlEvent, index: number) => {
+          let focusedDay = false;
+          if (index > 0) {
+            start = new Date(event.start);
+            beforeStart = new Date(data.period[index - 1].start);
+            focusedDay =
+              start.getDate() != beforeStart.getDate() ||
+              start.getMonth() != beforeStart.getMonth() ||
+              start.getFullYear() != beforeStart.getFullYear();
+          } else {
+            focusedDay = true;
+          }
+          return {
+            event: mapGqlPeriod(event),
+            firstOfDay: focusedDay,
+          };
+        })
         setEvents(oldEvents => {
-          console.log(oldEvents.length)
-          if(oldEvents.length === 0) {
+          if (oldEvents.length === 0) {
             return newPeriod
           }
           if (
@@ -117,7 +118,7 @@ export default function Calendar({ navigation }: { navigation: any }) {
               ...oldEvents,
               ...newPeriod
             ];
-          }else {
+          } else {
             return [
               ...newPeriod,
               ...oldEvents
@@ -139,14 +140,23 @@ export default function Calendar({ navigation }: { navigation: any }) {
     return <Text>Error :( {error.message}</Text>;
   }
 
-  let loadingComp;
   if (loading) {
-    loadingComp = <LoadingBar />;
+    return (
+      <View style={styles.container}>
+        <LoadingBar />
+        {
+          Array.from(Array(10).keys()).map((_, index) => {
+            return (
+              <ShimerEventContainer key={index} />
+            )
+          })
+        }
+      </View>
+    )
   }
 
   return (
     <View style={styles.container}>
-      {loadingComp}
       <FlatList
         removeClippedSubviews={true}
         maxToRenderPerBatch={10}
@@ -168,7 +178,6 @@ export default function Calendar({ navigation }: { navigation: any }) {
         }) => {
           return (
             <EventContainer
-              description={item.event.description}
               location={item.event.location}
               focused={index === focusedDateIndex}
               timeEnd={item.event.end}
@@ -177,6 +186,7 @@ export default function Calendar({ navigation }: { navigation: any }) {
               type="school"
               url={item.event.summary}
               key={item.event.start.valueOf()}
+              description={item.event.description}
               firstOfDay={item.firstOfDay}
               navigation={navigation}
               focusedDay={
@@ -198,7 +208,6 @@ export default function Calendar({ navigation }: { navigation: any }) {
         // }}
         // onEndReached={() => {
         //   if (!loading) {
-        //     console.log("end reached")
         //     setLimits(oldLimits => {
         //       return {
         //         start: new Date(oldLimits.end.valueOf() + 86400000),

@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import RestaurantsHeader from "../components/headers/RestaurantHeader";
+import { useEffect, useRef, useState } from "react";
+import { View, Text, StyleSheet, Animated, TouchableOpacity } from "react-native";
+import RestaurantsHeader, { Filters } from "../components/headers/RestaurantHeader";
 import RestaurantList from "../components/restaurants/RestaurantList";
 import { colorSet } from "../styles/style";
 import Swipeable, { PanGestureHandler, State } from "react-native-gesture-handler";
 import { gql, useQuery } from "@apollo/client";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 
 const GET_RESTAURANTS = gql`
 query restaurants{
@@ -34,56 +36,80 @@ export interface GqlRestaurant {
   }[] | null;
 }
 
+const Tab = createMaterialTopTabNavigator();
+
+const filter_restaurants = (restaurants: GqlRestaurant[], filter: number) => {
+  const filters = ["Tout", "Resto", "Cafet", "Brasserie"]
+  return restaurants.filter((restaurant) => {
+    if (filter === 0) {
+      return true
+    } else {
+      return restaurant.name.includes(filters[filter])
+    }
+  })
+}
+
 export default function RestaurantsScreen() {
   const [filter, setFilter] = useState<number>(0)
   const [restaurants, setRestaurants] = useState<GqlRestaurant[]>([])
   const { loading, error, refetch } = useQuery(GET_RESTAURANTS, {
     onCompleted: (data) => {
-      console.log(data)
       setRestaurants(data.restaurants)
     },
   }
   )
-
-  const filters = ["Tout", "Resto", "Cafet", "Brasserie"]
-
-  const restaurant_computed = restaurants.filter((restaurant) => {
-    if (filter === 0){
-      return true
-    }else{
-      return restaurant.name.includes(filters[filter])
-    }
-  })
-
-  return (
-    <PanGestureHandler
-      onHandlerStateChange={({ nativeEvent }) => {
-        if (nativeEvent.state === State.END) {
-          //handle end of swipe
-          if (nativeEvent.translationX < -100) {
-            if (filter === 3) {
-              setFilter(3)
-            } else {
-              setFilter((filter + 1) % 4)
-            }
-          }
-          if (nativeEvent.translationX > 100) {
-            if (filter === 0) {
-              setFilter(0)
-            } else {
-              setFilter((filter - 1) % 4)
-            }
-          }
-        }
-      }}
-    >
+  if (restaurants.length === 0) {
+    return (
       <View style={styles.container}>
-        <RestaurantsHeader active={filter} setFilter={setFilter} />
-        <RestaurantList restaurants={restaurant_computed}/>
       </View>
-    </PanGestureHandler>
+    )
+  }
+  return (
+    <View style={styles.container}>
+      <RestaurantsHeader active={filter} setFilter={setFilter} />
+      <Tab.Navigator
+        style={{ backgroundColor: colorSet.colorBackground }}
+        screenOptions={{
+          tabBarStyle: {
+            borderTopWidth: 0,
+            elevation: 0,
+            backgroundColor: colorSet.colorBackground,
+            borderBottomWidth: 1,
+          },
+          tabBarActiveTintColor: colorSet.colorText,
+          tabBarItemStyle:{
+            paddingVertical: 0,
+          },
+          tabBarLabelStyle: {
+            fontFamily: 'Inter',
+            fontSize: 14,
+            fontWeight: 'bold',
+            textTransform: 'none',
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: colorSet.colorPrimary,
+            borderRadius: 100,
+            height: 3,
+          },
+        }}
+      >
+        <Tab.Screen name="Tout" component={RestaurantList} initialParams={{
+          restaurants: restaurants
+        }} />
+        <Tab.Screen name="Resto" component={RestaurantList} initialParams={{
+          restaurants: filter_restaurants(restaurants, 0)
+        }} />
+        <Tab.Screen name="Cafet" component={RestaurantList} initialParams={{
+          restaurants: filter_restaurants(restaurants, 1)
+        }} />
+        <Tab.Screen name="Brasserie" component={RestaurantList} initialParams={{
+          restaurants: filter_restaurants(restaurants, 2)
+        }} />
+      </Tab.Navigator>
+    </View>
   )
 }
+
 
 const styles = StyleSheet.create({
   container: {
