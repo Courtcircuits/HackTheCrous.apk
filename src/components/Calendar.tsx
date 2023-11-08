@@ -8,6 +8,7 @@ import Legend from './Legend';
 import EventContainer from './calendar/EventContainer';
 import ShimerEventCard from './calendar/ShimerEventCard';
 import ShimerEventContainer from './calendar/ShimerEventContainer';
+import { GET_CALENDAR_ON_PERIOD } from '../queries/calendar_queries';
 
 function mapGqlPeriod(period: GqlEvent): TEvent {
   return {
@@ -19,17 +20,6 @@ function mapGqlPeriod(period: GqlEvent): TEvent {
   };
 }
 
-const GET_CALENDAR_ON_PERIOD = gql`
-  query Period($start: Date, $end: Date) {
-    period(start: $start, end: $end) {
-      start
-      end
-      summary
-      description
-      location
-    }
-  }
-`;
 
 interface Limits {
   start: Date;

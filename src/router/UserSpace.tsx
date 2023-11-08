@@ -23,24 +23,6 @@ export type UserSpaceParamList = {
 
 const Tab = createBottomTabNavigator();
 
-const GET_USER = gql`
-  query User {
-    user {
-      name
-      ical
-      nonce
-      school {
-        idschool
-        name
-      }
-      favorites {
-        idrestaurant
-        url
-        name
-      }
-    }
-  }
-`;
 
 const routes: Array<React.ComponentProps<typeof Tab.Screen>> = [
   {
@@ -84,6 +66,26 @@ const routes: Array<React.ComponentProps<typeof Tab.Screen>> = [
     },
   },
 ];
+
+
+export const GET_USER = gql`
+  query User {
+    user {
+      name
+      ical
+      nonce
+      school {
+        idschool
+        name
+      }
+      favorites {
+        idrestaurant
+        url
+        name
+      }
+    }
+  }
+`;
 
 export default function UserSpace(): JSX.Element {
   const { user, setUser } = React.useContext(UserContext);

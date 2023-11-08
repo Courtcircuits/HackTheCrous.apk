@@ -5,19 +5,7 @@ import { AuthContext } from './AuthContext';
 import { TEvent } from '../../types/types';
 import { parseDateGql } from '../utils/DateUtil';
 import { Text } from 'react-native';
-
-const GET_CALENDAR_ON_PERIOD = gql`
-  query Period($start: Date, $end: Date) {
-    period(start: $start, end: $end) {
-      start
-      end
-      summary
-      description
-      location
-    }
-  }
-`;
-
+import { GET_CALENDAR_ON_PERIOD } from '../queries/calendar_queries';
 const getCalendarOnPeriod = async (
   token: string,
   start: Date,

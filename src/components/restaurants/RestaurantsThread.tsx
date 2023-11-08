@@ -5,17 +5,6 @@ import { GqlRestaurant } from "../../screens/RestaurantsScreen"
 import { colorSet } from "../../styles/style"
 import RestaurantList from "./RestaurantList"
 
-const filter_restaurants = (restaurants: GqlRestaurant[], filter: number) => {
-  const filters = ["Tout", "Resto", "Cafet", "Brasserie"]
-  return restaurants.filter((restaurant) => {
-    if (filter === 0) {
-      return true
-    } else {
-      return restaurant.name.includes(filters[filter])
-    }
-  })
-}
-
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -57,16 +46,20 @@ export default function RestaurantThread({route}:{route:{params : {restaurants: 
           }}
         >
           <Tab.Screen name="Tout" component={RestaurantList} initialParams={{
-            restaurants: restaurants
+            restaurants: restaurants,
+            filter: "Tout"
           }} />
           <Tab.Screen name="Resto" component={RestaurantList} initialParams={{
-            restaurants: filter_restaurants(restaurants, 1)
+            restaurants: restaurants,
+            filter: "Resto"
           }} />
           <Tab.Screen name="Cafet" component={RestaurantList} initialParams={{
-            restaurants: filter_restaurants(restaurants, 2)
+            restaurants: restaurants,
+            filter: "Cafet"
           }} />
           <Tab.Screen name="Brasserie" component={RestaurantList} initialParams={{
-            restaurants: filter_restaurants(restaurants, 3)
+            restaurants: restaurants,
+            filter: "Brasserie"
           }} />
         </Tab.Navigator>
   )

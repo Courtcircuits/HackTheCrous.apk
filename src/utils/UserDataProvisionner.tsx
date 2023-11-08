@@ -1,29 +1,11 @@
 import { gql, useQuery } from '@apollo/client';
 import React from 'react';
 import { Text } from 'react-native';
-import { UserContext, User } from '../contexts/UserContext';
+import { UserContext } from '../contexts/UserContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { AppStackParamList } from '../../App';
 import { createApolloClient } from './ApolloClient';
-
-const GET_USER = gql`
-  query User {
-    user {
-      name
-      ical
-      nonce
-      school {
-        idschool
-        name
-      }
-      favorites {
-        idrestaurant
-        url
-        name
-      }
-    }
-  }
-`;
+import { GET_USER } from '../queries/user_queries';
 
 export default function UserDataProvisionner(): JSX.Element {
   const { user, setUser } = React.useContext(UserContext);

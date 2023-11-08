@@ -9,25 +9,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 import RestaurantThread from "../components/restaurants/RestaurantsThread";
 import RestaurantScreen from "./RestaurantScreen";
+import { GET_RESTAURANTS } from "../queries/restaurants_queries";
 
-
-const GET_RESTAURANTS = gql`
-query restaurants{
-  restaurants{
-    idrestaurant
-    name
-    url
-    liked
-    meals{
-      foodies{
-        category
-        names
-      }
-      typemeal
-    }
-  }
-}
-`
 
 export interface GqlRestaurant {
   idrestaurant: number;

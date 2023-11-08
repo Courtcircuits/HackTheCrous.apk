@@ -1,12 +1,18 @@
 import HTCLogo from './../../../assets/icons/logo-hacl.svg';
 import React, { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
-import { Image, StyleSheet, View } from 'react-native';
-import BackButton from './BackButton';
+import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import SearchField from '../SearchField';
 import ProfilePicture from '../user/ProfilePicture';
 
-export default function SearchHeader() {
+interface PropsSearchHeader {
+  searchFocused: boolean;
+  setSearchFocused: (value: boolean) => void;
+  setSearch?: (value: string) => void;
+  search?: string;
+}
+
+export default function SearchHeader(props: PropsSearchHeader) {
   const { user } = useContext(UserContext);
 
   if (!user.logged) {
@@ -16,21 +22,27 @@ export default function SearchHeader() {
       </View>
     );
   }
+
   return (
     <View style={styles.header}>
-      <View style={styles.element}>
-        <BackButton></BackButton>
-      </View>
-      <View style={{
-        ...styles.mainElement
-      }}>
-        <SearchField/>
+      <View style={styles.mainElement}>
+        <SearchField search={props.search} setSearch={props.setSearch} focused={props.searchFocused} setSearchFocused={props.setSearchFocused} />
       </View>
       <View style={{ ...styles.element, justifyContent: 'flex-end' }}>
-        <ProfilePicture/>
+        {
+          !props.searchFocused ? <ProfilePicture /> :
+            <TouchableOpacity onPress={
+              () => {
+                props.setSearchFocused(false);
+              }
+            }>
+              <Text style={{ color: 'white', fontSize: 15, paddingHorizontal: 10 }}>Annuler</Text>
+            </TouchableOpacity>
+        }
       </View>
-    </View>
-  );
+    </View>)
+
+
 }
 
 const styles = StyleSheet.create({
@@ -40,8 +52,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 2,
   },
-  mainElement : {
-    flex:3
+  mainElement: {
+    flex: 3
   },
   element: {
     flex: 1,

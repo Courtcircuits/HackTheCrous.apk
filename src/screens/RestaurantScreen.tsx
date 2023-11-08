@@ -4,26 +4,10 @@ import { View, StyleSheet, Text, ScrollView, RefreshControl } from "react-native
 import { FlatList } from "react-native-gesture-handler"
 import RestaurantHeader from "../components/headers/RestaurantHeader"
 import RestaurantCard from "../components/restaurants/RestaurantCard"
+import { GET_RESTAURANT } from "../queries/restaurants_queries"
 import { colorSet } from "../styles/style"
 import { GqlRestaurant } from "./RestaurantsScreen"
 
-const GET_RESTAURANT = gql`
-query restaurant($url: String!){
-  restaurant(url: $url){
-    idrestaurant
-    name
-    url
-    liked
-    meals{
-      foodies{
-        category
-        names
-      }
-      typemeal
-    }
-  }
-}
-`
 
 export default function RestaurantScreen({ route }) {
   const [restaurant, setRestaurant] = useState<GqlRestaurant | undefined>(undefined)
