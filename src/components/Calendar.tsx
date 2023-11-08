@@ -185,28 +185,28 @@ export default function Calendar({ navigation }: { navigation: any }) {
               }></EventContainer>
           );
         }}
-        // onScroll={event => {
-        //   if (event.nativeEvent.contentOffset.y < 0) {
-        //     if (!loading) {
-        //       setLimits(oldLimits => {
-        //         return {
-        //           start: new Date(oldLimits.start.valueOf() - 86400000 * 30),
-        //           end: new Date(oldLimits.start.valueOf() - 86400000),
-        //         };
-        //       });
-        //     }
-        //   }
-        // }}
-        // onEndReached={() => {
-        //   if (!loading) {
-        //     setLimits(oldLimits => {
-        //       return {
-        //         start: new Date(oldLimits.end.valueOf() + 86400000),
-        //         end: new Date(oldLimits.end.valueOf() + 86400000 * 30),
-        //       };
-        //     });
-        //   }
-        // }}
+      // onScroll={event => {
+      //   if (event.nativeEvent.contentOffset.y < 0) {
+      //     if (!loading) {
+      //       setLimits(oldLimits => {
+      //         return {
+      //           start: new Date(oldLimits.start.valueOf() - 86400000 * 30),
+      //           end: new Date(oldLimits.start.valueOf() - 86400000),
+      //         };
+      //       });
+      //     }
+      //   }
+      // }}
+      // onEndReached={() => {
+      //   if (!loading) {
+      //     setLimits(oldLimits => {
+      //       return {
+      //         start: new Date(oldLimits.end.valueOf() + 86400000),
+      //         end: new Date(oldLimits.end.valueOf() + 86400000 * 30),
+      //       };
+      //     });
+      //   }
+      // }}
       />
     </View>
   );
