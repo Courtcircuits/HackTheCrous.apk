@@ -34,7 +34,6 @@ export default function Field(props: Props) {
     return null;
   }
 
-  console.log(props.value);
 
   if (props.value) {
     if (props.type == 'password') {

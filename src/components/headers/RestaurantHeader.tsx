@@ -5,7 +5,7 @@ import { colorSet } from "../../styles/style";
 import ProfilePicture from "../user/ProfilePicture";
 import BackButton from "./BackButton";
 
-export default function RestaurantsHeader(props: {active: number, setFilter: (filter:number)=>void}): JSX.Element {
+export default function RestaurantsHeader(): JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.header}>

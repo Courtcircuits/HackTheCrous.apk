@@ -6,6 +6,9 @@ import { colorSet } from "../styles/style";
 import Swipeable, { PanGestureHandler, State } from "react-native-gesture-handler";
 import { gql, useQuery } from "@apollo/client";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import RestaurantThread from "../components/restaurants/RestaurantsThread";
+import RestaurantScreen from "./RestaurantScreen";
 
 
 const GET_RESTAURANTS = gql`
@@ -17,8 +20,10 @@ query restaurants{
     liked
     meals{
       foodies{
+        category
         names
       }
+      typemeal
     }
   }
 }
@@ -30,24 +35,21 @@ export interface GqlRestaurant {
   url: string;
   liked: boolean;
   meals: {
+    typemeal: string;
     foodies: {
+      category: string;
       names: string[];
     }[];
   }[] | null;
 }
 
-const Tab = createMaterialTopTabNavigator();
-
-const filter_restaurants = (restaurants: GqlRestaurant[], filter: number) => {
-  const filters = ["Tout", "Resto", "Cafet", "Brasserie"]
-  return restaurants.filter((restaurant) => {
-    if (filter === 0) {
-      return true
-    } else {
-      return restaurant.name.includes(filters[filter])
-    }
-  })
+type RestaurantsStackParamList = {
+  RestaurantThread: { restaurants: GqlRestaurant[] };
+  RestaurantScreen: { restaurant: GqlRestaurant } | undefined;
 }
+
+const Stack = createStackNavigator<RestaurantsStackParamList>();
+
 
 export default function RestaurantsScreen() {
   const [filter, setFilter] = useState<number>(0)
@@ -66,46 +68,21 @@ export default function RestaurantsScreen() {
   }
   return (
     <View style={styles.container}>
-      <RestaurantsHeader active={filter} setFilter={setFilter} />
-      <Tab.Navigator
-        style={{ backgroundColor: colorSet.colorBackground }}
-        screenOptions={{
-          tabBarStyle: {
-            borderTopWidth: 0,
-            elevation: 0,
-            backgroundColor: colorSet.colorBackground,
-            borderBottomWidth: 1,
-          },
-          tabBarActiveTintColor: colorSet.colorText,
-          tabBarItemStyle:{
-            paddingVertical: 0,
-          },
-          tabBarLabelStyle: {
-            fontFamily: 'Inter',
-            fontSize: 14,
-            fontWeight: 'bold',
-            textTransform: 'none',
-          },
-          tabBarIndicatorStyle: {
-            backgroundColor: colorSet.colorPrimary,
-            borderRadius: 100,
-            height: 3,
-          },
-        }}
-      >
-        <Tab.Screen name="Tout" component={RestaurantList} initialParams={{
+      <RestaurantsHeader />
+      <Stack.Navigator screenOptions={{
+        headerShown: false,
+        cardStyle: {
+          backgroundColor: colorSet.colorBackground,
+        },
+        gestureDirection: "vertical",
+        cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      }}>
+        <Stack.Screen component={RestaurantThread} name="RestaurantThread" initialParams={{
           restaurants: restaurants
-        }} />
-        <Tab.Screen name="Resto" component={RestaurantList} initialParams={{
-          restaurants: filter_restaurants(restaurants, 0)
-        }} />
-        <Tab.Screen name="Cafet" component={RestaurantList} initialParams={{
-          restaurants: filter_restaurants(restaurants, 1)
-        }} />
-        <Tab.Screen name="Brasserie" component={RestaurantList} initialParams={{
-          restaurants: filter_restaurants(restaurants, 2)
-        }} />
-      </Tab.Navigator>
+        }}
+        />
+        <Stack.Screen component={RestaurantScreen} name="RestaurantScreen" />
+      </Stack.Navigator>
     </View>
   )
 }

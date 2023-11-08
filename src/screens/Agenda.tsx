@@ -5,7 +5,7 @@ import AgendaHeader from '../components/headers/AgendaHeader';
 import React from 'react';
 import {  EventsProvider } from '../contexts/EventsContext';
 import Calendar from '../components/Calendar';
-import { createStackNavigator } from '@react-navigation/stack';
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import EventScreen from './EventScreen';
 import { TEvent } from '../../types/types';
 
@@ -24,14 +24,14 @@ export default function Agenda(): JSX.Element {
     <View style={styles.container}>
       <AgendaHeader date={focusedDate} />
       <EventsProvider>
-        <Stack.Navigator screenOptions={
-          {
+        <Stack.Navigator screenOptions={{
             headerShown: false,
             cardStyle: {
               backgroundColor: colorSet.colorBackground,
             },
-          }
-        }>
+          gestureDirection:"vertical",
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+        }}>
           <Stack.Screen name="Calendar" component={Calendar} />
           <Stack.Screen name="EventScreen" component={EventScreen} initialParams={{
             event: {

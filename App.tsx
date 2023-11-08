@@ -59,6 +59,8 @@ export default function App(): JSX.Element {
     VT323: require('./assets/fonts/VT323-Regular.ttf'),
     'Inter-Bold': require('./assets/fonts/Inter-Bold.ttf'),
     'Inter-Light': require('./assets/fonts/Inter-Light.ttf'),
+    'Darker-Bold': require('./assets/fonts/DarkerGrotesque-Bold.ttf'),
+    'Darker-Regular': require('./assets/fonts/DarkerGrotesque-Regular.ttf'),
   });
 
 

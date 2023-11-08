@@ -80,11 +80,8 @@ export default function GuestHome() {
               text="S'inscrire avec Google"
               color={colorSet.colorText}
               action={() => {
-                console.log('Google login');
-
                 const res = authenticate('tristan-mihai.radulescu@etu.umontpellier.fr', '12341234', false);
                 res.then(data => {
-                  console.log(data)
                   setAuth((auth)=>{
                     return {
                     refreshToken: data.refreshToken ? data.refreshToken : '',

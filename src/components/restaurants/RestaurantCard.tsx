@@ -5,12 +5,14 @@ import LikeFocused from "../../../assets/icons/restaurants/LikeFocused.svg";
 import LikeUnfocused from "../../../assets/icons/restaurants/LikeUnfocused.svg";
 import Crowd from "../../../assets/icons/restaurants/Crowd.svg";
 import Distance from "../../../assets/icons/restaurants/Distance.svg";
+import { useNavigation } from "@react-navigation/native";
 
 interface PropsRestaurantCard {
   name: string;
   url: string;
   meals: string[];
   distance: number;
+  navigate: () => void;
 }
 
 export default function RestaurantCard(props: PropsRestaurantCard): JSX.Element {
@@ -18,11 +20,18 @@ export default function RestaurantCard(props: PropsRestaurantCard): JSX.Element 
   return (
     <View style={styles.container}>
       <View style={styles.title_container}>
-        <Text style={styles.title}>
-          {props.name}
-        </Text>
+        <TouchableOpacity onPress={() => {
+          props.navigate()
+        }}>
+          <Text style={styles.title}>
+            {props.name}
+          </Text>
+        </TouchableOpacity>
         <LikeButton likes={likes} setLikes={setLikes} />
       </View>
+      <TouchableOpacity onPress={() => {
+        props.navigate()
+      }}>
       <View>
         {props.meals.map((value, index) => {
           return (
@@ -32,11 +41,11 @@ export default function RestaurantCard(props: PropsRestaurantCard): JSX.Element 
           )
         })}
       </View>
-      <View style={styles.list_tags}>
+      <View style={[styles.list_tags, { marginTop: 10 }]}>
         <View style={styles.list_tags}>
           <Crowd with={30} height={30} />
           <Text style={styles.label_tag}>
-            Crowded
+            Peuplé
           </Text>
         </View>
         <View style={styles.list_tags}>
@@ -46,6 +55,7 @@ export default function RestaurantCard(props: PropsRestaurantCard): JSX.Element 
           </Text>
         </View>
       </View>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -79,8 +89,8 @@ function LikeButton(props: { likes: boolean, setLikes: (likes: boolean) => void 
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 15,
-    paddingBottom: 10,
+    paddingTop: 25,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: colorSet.colorBackgroundMute,
   },
@@ -110,5 +120,6 @@ const styles = StyleSheet.create({
     color: colorSet.colorTextMuted,
     fontFamily: 'Inter',
     fontSize: 12,
+    marginRight: 5,
   }
 })

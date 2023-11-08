@@ -35,7 +35,6 @@ const getCalendarOnPeriod = async (
         end: '31-Nov-2023',
       },
     });
-    console.log(result);
     return result.data.period;
   } catch (e) {
     console.error(e);

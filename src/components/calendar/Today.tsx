@@ -21,9 +21,6 @@ function Day(props: DayProps): JSX.Element{
   const refView = React.useRef<View>(null);
   useEffect(() => {
     refView.current?.measure((x, y, width, height, pageX, pageY) => {
-      console.log('pageY', pageY);
-      console.log('height', height);
-      console.log('y', y);
       setOffsetY(pageY + height);
     });
   },[refView.current]);

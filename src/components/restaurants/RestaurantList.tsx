@@ -34,7 +34,7 @@ function extractFoodNames(meals: { foodies: { names: string[] }[] }[] | null): s
 
 }
 
-export default function RestaurantList({ route }: { route: { params: { restaurants: GqlRestaurant[] } } }): JSX.Element {
+export default function RestaurantList({ route, navigation }): JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
@@ -45,6 +45,9 @@ export default function RestaurantList({ route }: { route: { params: { restauran
             url={item.url}
             meals={extractFoodNames(item.meals)}
             distance={0}
+            navigate={() => {
+              navigation.push("RestaurantScreen", { restaurant: item })
+            }}
           />
         )}
         keyExtractor={(item) => item.idrestaurant.toString()}

@@ -61,6 +61,7 @@ export default function Calendar({ navigation }: { navigation: any }) {
       start: parseDateGql(limits.start),
       end: parseDateGql(limits.end),
     },
+    pollInterval: 1000 * 60 * 60,
     onError(error) {
       console.error(error);
     },

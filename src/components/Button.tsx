@@ -26,7 +26,6 @@ export default function Button(props: Props){
       <TouchableOpacity
       accessibilityLabel={props.text}
       onPress={()=>{
-        console.log('Button pressed');
         props.action();
       }}
       style={{...styles.button,...props.style, borderColor: props.color}}>
