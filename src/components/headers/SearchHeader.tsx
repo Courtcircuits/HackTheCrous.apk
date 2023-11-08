@@ -1,7 +1,7 @@
 import HTCLogo from './../../../assets/icons/logo-hacl.svg';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { UserContext } from '../../contexts/UserContext';
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
 import SearchField from '../SearchField';
 import ProfilePicture from '../user/ProfilePicture';
 
@@ -13,33 +13,62 @@ interface PropsSearchHeader {
 }
 
 export default function SearchHeader(props: PropsSearchHeader) {
-  const { user } = useContext(UserContext);
+  const [focused_real, setFocused_real] = React.useState(props.searchFocused);
 
-  if (!user.logged) {
-    return (
-      <View style={styles.header}>
-        <HTCLogo with={50} height={50} />
-      </View>
-    );
+  const grow = useRef(new Animated.Value(1)).current;
+
+  const growAnimation = () => {
+    Animated.timing(grow, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
   }
+
+  const ungrowAnimation = () => {
+    Animated.timing(grow, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  }
+
+
+
+  useEffect(() => {
+    if (props.searchFocused) {
+      setTimeout(() => {
+        setFocused_real(true);
+      }, 200);
+      ungrowAnimation();
+
+    } else {
+      setFocused_real(false);
+      growAnimation();
+    }
+  }, [props.searchFocused]);
+
 
   return (
     <View style={styles.header}>
-      <View style={styles.mainElement}>
-        <SearchField search={props.search} setSearch={props.setSearch} focused={props.searchFocused} setSearchFocused={props.setSearchFocused} />
-      </View>
-      <View style={{ ...styles.element, justifyContent: 'flex-end' }}>
-        {
-          !props.searchFocused ? <ProfilePicture /> :
-            <TouchableOpacity onPress={
-              () => {
-                props.setSearchFocused(false);
-              }
-            }>
-              <Text style={{ color: 'white', fontSize: 15, paddingHorizontal: 10 }}>Annuler</Text>
-            </TouchableOpacity>
-        }
-      </View>
+      <Animated.View style={{
+        width: grow.interpolate({
+          inputRange: [0, 1]
+          , outputRange: ['70%', '100%'],
+        }),
+      }}>
+        <SearchField search={props.search} setSearch={props.setSearch} focused={focused_real} setSearchFocused={props.setSearchFocused} />
+      </Animated.View>
+      {
+        !focused_real ? null :
+          <TouchableOpacity style={{ ...styles.element, justifyContent: 'flex-end' }} onPress={
+            () => {
+              props.setSearchFocused(false);
+            }
+          }>
+            <Text style={{ color: 'white', fontSize: 15, paddingHorizontal: 10 }} numberOfLines={1}>Annuler</Text>
+          </TouchableOpacity>
+      }
     </View>)
 
 
@@ -48,12 +77,8 @@ export default function SearchHeader(props: PropsSearchHeader) {
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 2,
-  },
-  mainElement: {
-    flex: 3
   },
   element: {
     flex: 1,
