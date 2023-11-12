@@ -1,9 +1,8 @@
-import { StyleSheet, Appearance } from 'react-native';
+import { StyleSheet, Appearance, ColorSchemeName } from 'react-native';
 
-const colorScheme = Appearance.getColorScheme();
+let colorScheme = Appearance.getColorScheme();
 
-
-interface ColorScheme {
+export interface ColorScheme {
   colorBackground: string;
   colorBackgroundTransparent: string;
   colorBackgroundSoft: string;
@@ -54,8 +53,7 @@ const basicColorSet = {
 
 let colorSet: ColorScheme;
 
-if (colorScheme === 'dark') {
-  colorSet = {
+const darkTheme = {
     colorBackground: basicColorSet.black,
     colorBackgroundTransparent: basicColorSet.blackTransparent,
     colorBackgroundSoft: basicColorSet.blackSoft,
@@ -70,9 +68,9 @@ if (colorScheme === 'dark') {
     colorText: basicColorSet.textdark3,
     colorTextMuted: basicColorSet.textdark2,
     colorPrimary: basicColorSet.colorprimary,
-  };
-} else {
-  colorSet = {
+}
+
+const lightTheme = {
     colorBackground: basicColorSet.white,
     colorBackgroundTransparent: basicColorSet.whiteTransparent,
     colorBackgroundSoft: basicColorSet.whiteSoft,
@@ -87,9 +85,20 @@ if (colorScheme === 'dark') {
     colorText: basicColorSet.textlight1,
     colorTextMuted: basicColorSet.textlight2,
     colorPrimary: basicColorSet.colorprimary,
-  };
+  }
+
+if (colorScheme === 'dark') {
+  colorSet = darkTheme;
+} else {
+  colorSet = lightTheme;
 }
 
+export function GetColorScheme(colorScheme: ColorSchemeName): ColorScheme {
+  if(colorScheme === 'dark') {
+    return darkTheme;
+  }
+  return lightTheme;
+}
 
 export { colorSet };
 

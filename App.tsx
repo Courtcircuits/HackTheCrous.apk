@@ -2,14 +2,14 @@ import { AppRegistry } from 'react-native';
 import React from 'react';
 import GuestHome from './src/screens/GuestHome';
 import Login from './src/screens/Login';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer} from '@react-navigation/native';
+import { ThemeProvider } from './src/contexts/ThemeContext';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Register from './src/screens/Register';
 import { UserContextProvider } from './src/contexts/UserContext';
 import { AuthContextProvider } from './src/contexts/AuthContext';
 import UserSpace from './src/router/UserSpace';
 import { ApolloClientProvider } from './src/utils/ApolloClient';
-import UserDataProvisionner from './src/utils/UserDataProvisionner';
 import { useFonts } from 'expo-font';
 import { LoadingContextProvider } from './src/contexts/LoadingContext';
 
@@ -19,7 +19,6 @@ export type AppStackParamList = {
   Login: undefined;
   Register: undefined;
   UserSpace: undefined;
-  UserDataProvisionner: undefined;
 };
 
 export type AppStackNavigation = {
@@ -44,10 +43,6 @@ const routes: Array<React.ComponentProps<typeof Stack.Screen>> = [
     component: Register,
   },
   {
-    name: 'UserDataProvisionner',
-    component: UserDataProvisionner,
-  },
-  {
     name: 'UserSpace',
     component: UserSpace,
   },
@@ -70,6 +65,7 @@ export default function App(): JSX.Element {
 
   return (
     <NavigationContainer>
+    <ThemeProvider>
       <AuthContextProvider>
         <UserContextProvider>
           <ApolloClientProvider>
@@ -88,6 +84,7 @@ export default function App(): JSX.Element {
           </ApolloClientProvider>
         </UserContextProvider>
       </AuthContextProvider>
+    </ThemeProvider>
     </NavigationContainer>
   );
 }

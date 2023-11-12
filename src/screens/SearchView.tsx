@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import SearchHeader from '../components/headers/SearchHeader';
-import { colorSet } from '../styles/style';
+import { ColorScheme, colorSet } from '../styles/style';
 import ShareCard from '../components/ShareCard';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import LoadingBar from '../components/LoadingBar';
@@ -11,6 +11,7 @@ import { GqlRestaurant } from './RestaurantsScreen';
 import RestaurantCard from '../components/restaurants/RestaurantCard';
 import { extractFoodNames } from '../components/restaurants/RestaurantList';
 import { useDebounce } from '../hooks/debouncer';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 interface Food {
   names: string[];
@@ -28,6 +29,9 @@ export default function SearchView() {
   const [searchFocused, setSearchFocused] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
 
+  const { theme } = useContext(ThemeContext)
+  const styles = getStyles(theme)
+
 
   const { loading } = useQuery(GET_FOODS, {
     onCompleted(data: { food: Food[] }) {
@@ -43,9 +47,9 @@ export default function SearchView() {
   return (
     <View style={styles.container}>
       {loadingComp}
-      <SearchHeader setSearch={setSearch} search={search} searchFocused={searchFocused} setSearchFocused={setSearchFocused}  />
+      <SearchHeader setSearch={setSearch} search={search} searchFocused={searchFocused} setSearchFocused={setSearchFocused} />
       <View style={styles.spacer}></View>
-      {searchFocused ? <SearchFeed search={search}/> : <RecommendationFeed recommendations={recommendations} />}
+      {searchFocused ? <SearchFeed search={search} /> : <RecommendationFeed recommendations={recommendations} />}
     </View>
   );
 }
@@ -70,7 +74,7 @@ function SearchFeed(props: { search: string }) {
     refetch();
   }, [debouncedSearchTerm])
 
-  return(
+  return (
     <FlatList
       data={search_results}
       renderItem={({ item }) => (
@@ -90,6 +94,8 @@ function SearchFeed(props: { search: string }) {
   )
 }
 function RecommendationFeed(props: { recommendations: Food[] }) {
+  const { theme } = useContext(ThemeContext)
+  const styles = getStyles(theme)
   return (
     <FlatList
       ListHeaderComponent={<View>
@@ -110,6 +116,8 @@ function RecommendationFeed(props: { recommendations: Food[] }) {
 }
 
 function RecommendationCard(props: { food: Food }) {
+  const { theme } = useContext(ThemeContext)
+  const styles = getStyles(theme)
   let restaurants_names: string = '';
   props.food.restaurants.forEach((restaurant) => {
     restaurants_names += restaurant.name + ', ';
@@ -129,7 +137,7 @@ function RecommendationCard(props: { food: Food }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colorSet: ColorScheme) => StyleSheet.create({
   container: {
     paddingHorizontal: 10,
     paddingTop: 17,
