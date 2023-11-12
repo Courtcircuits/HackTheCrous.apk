@@ -1,5 +1,4 @@
-import { Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import SearchIcon from '../../assets/icons/menu/Search.svg';
 import { colorSet } from '../styles/style';
 
@@ -57,6 +56,7 @@ export default function SearchField(props: PropsSearchField) {
       borderRadius: 100,
     }}
       onPress={() => {
+        console.log("setSearchFocused");
         props.setSearchFocused && props.setSearchFocused(true);
       }}
     >

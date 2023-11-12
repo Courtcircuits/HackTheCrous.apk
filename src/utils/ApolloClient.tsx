@@ -13,7 +13,7 @@ export function createApolloClient(
   token: string,
 ): ApolloClient<NormalizedCacheObject> {
   const httpLink = createHttpLink({
-    uri: `${EXPO_PUBLIC_API_URL}/graphql`,
+    uri: `${process.env.EXPO_PUBLIC_API_URL}/graphql`,
     headers: {
       Authorization: `Bearer ${token}`,
     },

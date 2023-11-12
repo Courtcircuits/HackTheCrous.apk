@@ -4,6 +4,7 @@ import { UserContext } from '../../contexts/UserContext';
 import { Text, StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
 import SearchField from '../SearchField';
 import ProfilePicture from '../user/ProfilePicture';
+import { colorSet } from '../../styles/style';
 
 interface PropsSearchHeader {
   searchFocused: boolean;
@@ -54,7 +55,7 @@ export default function SearchHeader(props: PropsSearchHeader) {
       <Animated.View style={{
         width: grow.interpolate({
           inputRange: [0, 1]
-          , outputRange: ['70%', '100%'],
+          , outputRange: ['80%', '100%'],
         }),
       }}>
         <SearchField search={props.search} setSearch={props.setSearch} focused={focused_real} setSearchFocused={props.setSearchFocused} />
@@ -66,7 +67,7 @@ export default function SearchHeader(props: PropsSearchHeader) {
               props.setSearchFocused(false);
             }
           }>
-            <Text style={{ color: 'white', fontSize: 15, paddingHorizontal: 10 }} numberOfLines={1}>Annuler</Text>
+            <Text style={{ color: colorSet.colorText, fontSize: 15, paddingHorizontal: 10 }} numberOfLines={1}>Annuler</Text>
           </TouchableOpacity>
       }
     </View>)

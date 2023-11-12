@@ -28,7 +28,7 @@ async function authenticate(
   remember: boolean,
 ): Promise<AuthResponse> {
   try {
-    const res = await axios.post(`${EXPO_PUBLIC_API_URL}/login`, {
+    const res = await axios.post(process.env.EXPO_PUBLIC_API_URL+"/login", {
       mail: email,
       password: password,
       remember: remember,

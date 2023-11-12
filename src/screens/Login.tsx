@@ -28,6 +28,7 @@ async function authenticate(
 ): Promise<AuthResponse> {
   console.log(`authenticating ${email}`)
   try {
+    console.log(`authenticating ${email} on ${EXPO_PUBLIC_API_URL}/login`)
     const res = await axios.post(`${EXPO_PUBLIC_API_URL}/login`, {
       mail: email,
       password: password,

@@ -10,6 +10,7 @@ import { GET_FOODS, SEARCH } from '../queries/restaurants_queries';
 import { GqlRestaurant } from './RestaurantsScreen';
 import RestaurantCard from '../components/restaurants/RestaurantCard';
 import { extractFoodNames } from '../components/restaurants/RestaurantList';
+import { useDebounce } from '../hooks/debouncer';
 
 interface Food {
   names: string[];
@@ -51,6 +52,7 @@ export default function SearchView() {
 
 function SearchFeed(props: { search: string }) {
   const [search_results, setSearch_results] = useState<GqlRestaurant[]>([]);
+  const debouncedSearchTerm = useDebounce<string>(props.search, 500);
   const { refetch } = useQuery(SEARCH, {
     variables: {
       query: props.search,
@@ -65,9 +67,8 @@ function SearchFeed(props: { search: string }) {
   });
 
   useEffect(() => {
-    console.log(props.search);
     refetch();
-  }, [props.search])
+  }, [debouncedSearchTerm])
 
   return(
     <FlatList

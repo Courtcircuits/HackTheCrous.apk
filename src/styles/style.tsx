@@ -76,7 +76,7 @@ if (colorScheme === 'dark') {
     colorBackground: basicColorSet.white,
     colorBackgroundTransparent: basicColorSet.whiteTransparent,
     colorBackgroundSoft: basicColorSet.whiteSoft,
-    colorBackgroundMute: basicColorSet.whiteMute,
+    colorBackgroundMute: basicColorSet.textlight2,
     colorBackgroundMuter: basicColorSet.whiteMuter,
 
     colorBorder: basicColorSet.dividerLight2,

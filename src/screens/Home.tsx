@@ -19,7 +19,7 @@ import ShimerEventCard from '../components/calendar/ShimerEventCard';
 import ShimerText from '../components/ShimerText';
 import { GET_CALENDAR_ON_PERIOD } from '../queries/calendar_queries';
 
-console.log("server is : " + EXPO_PUBLIC_API_URL)
+console.log("server is = " + EXPO_PUBLIC_API_URL)
 
 
 const format_date_to_print = (date: Date) => {
